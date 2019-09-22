@@ -8,20 +8,49 @@ import {Link} from "react-dom";
 
 
 
+function SuggestionBox({data, searchTerm, redirectSearch}){
+    
+    return (
+        <>
+            {data && data.length ? (
+                <>
+                    <a class="panel-block" onClick={() => redirectSearch()}>
+                        <span class="panel-icon">
+                            <i class="fa fa-map-marker"></i>
+                        </span>
+                        See all listing for {searchTerm}
+                    </a>
+                {data.map((source, i) => (
+                      <a class="panel-block" key={i} onClick={() => redirectSearch()}>
+                        <span class="panel-icon">
+                            <i class="fa fa-map-marker"></i>
+                        </span>
+                        {source.province.toUpperCase()}-{source.title}  
+                      </a>
+                    )   
+                )}
+                </>
+            ) : <>
+                <a class="panel-block">
+                    <span class="panel-icon">
+                        <i class="fa fa-cross"></i>
+                    </span>
+                    Find your place now
+                </a>
+            </>}
+        </>
+    )
+}
 class IndexComponent extends React.Component{
     constructor(){
         super();
         this.state = {
             searchValue: null,
-            data: null,
-            showSuggestions: false
+            data: [],
+            showSuggestions: false,
+  
         }
     }
-
-    static defaultProperty={
-        suggestions: []
-      };
-
     onSearchSubmit = (e) => {
         console.log(`/places?query=${this.state.searchValue}`)
         this.props.history.push(`/places?query=${this.state.searchValue}`);
@@ -31,45 +60,35 @@ class IndexComponent extends React.Component{
         console.log(this.state.data)
     }
 
-    handleFilter(){
-        this.setState((prevState, props) => ({
-            panelShow: prevState.panelShow ? false : true
-          }));
+    redirectSearch(){
+        const { history } = this.props;
     }
 
     onSearchValueChange = (e) => {
         this.setState({
-            showSuggestions: false,
             searchValue: e.target.value
         })
-
-        
-        if(this.state.searchValue !== ''){
-            console.log('not empty')
-
-            fetch(`/api/search?query=${this.state.searchValue}`, {
-                method: 'POST'
+        if(e.target.value.length <= 2 && e.key === 'Backspace') {
+            this.setState({
+                data: []
             })
-            .then((res) => res.json())
-            .then((res) => {
-    
-               if(this.state.searchValue === ''){
-               
-                    console.log('what')
-                    return;
-               }
-
-               this.setState({
-                data: [...res],
-                })
-
-            });
+            return;
         }
+
+        if(e.target.value.length <= 2) return;
+
+        fetch(`/api/search?query=${e.target.value}`, {
+            method: 'POST'
+        })
+        .then((res) => {
+            res.json().then(parsed => this.setState({data: [...parsed]}))
+        })
     }
 
     render(){
-        const { data, searchValue, showSuggestions } = this.state;
+    const { data, searchValue, showSuggestions } = this.state;
     return (
+        
         <React.Fragment>
             <section class="section">
                 <div class="container search-container">
@@ -92,26 +111,12 @@ class IndexComponent extends React.Component{
                     <div class="search-place">
                     <div class="field has-addons">
                         <div class="control has-icons-left has-icons-right">
-                            <input class="input is-large" type="address" placeholder="City, Neighborhood, ZIP" onChange={this.onSearchValueChange}
-                            value={searchValue}/>
+                            <input class="input is-large" type="address" placeholder="City, Neighborhood, ZIP" onKeyUp={this.onSearchValueChange}/>
                             <span class="icon is-medium is-left">
                                 <i class="fa fa-map-marker fa-lg"></i>
                             </span>
                             <div class="panel">
-                                {data && data.length && showSuggestions ? (
-                                    <>
-                                    {data.map((data, i) => (
-                                       <a class="panel-block" key={i}>
-                                       <span class="panel-icon">
-                                           <i class="fa fa-map-marker-alt"></i>
-                                       </span>
-                                       {data.province}-{data.title}
-                                       </a>
-                                        ))}
-                                </> )
-                                 : (
-                                    null)}
-                        
+                            <SuggestionBox data={data} searchTerm={searchValue}/>
                             </div>
                         </div>
                         <div class="control">

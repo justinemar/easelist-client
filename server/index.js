@@ -35,7 +35,7 @@ app.use(express.static(path.resolve(__dirname, '../public')));
 app.post('/api/search', (req, res) => {
     const { query } = req.query;
     if(query === ''){
-        res.json([])
+        return res.json([])
     }
     console.log(query)
     List.aggregate([{
