@@ -15,17 +15,14 @@ function SuggestionBox({data, searchTerm, redirectSearch}){
             {data && data.length ? (
                 <>
                     <a class="panel-block" onClick={() => redirectSearch()}>
-                        <span class="panel-icon">
-                            <i class="fa fa-map-marker"></i>
-                        </span>
-                        See all listing for {searchTerm}
+                        Suggested province {data[0].province}
                     </a>
                 {data.map((source, i) => (
-                      <a class="panel-block" key={i} onClick={() => redirectSearch()}>
+                      <a class="panel-block" key={i} onClick={() => redirectSearch(source, source.city)}>
                         <span class="panel-icon">
                             <i class="fa fa-map-marker"></i>
                         </span>
-                        {source.province.toUpperCase()}-{source.title}  
+                        {source.address.toUpperCase()}
                       </a>
                     )   
                 )}
@@ -51,19 +48,26 @@ class IndexComponent extends React.Component{
   
         }
     }
+
     onSearchSubmit = (e) => {
-        console.log(`/places?query=${this.state.searchValue}`)
-        this.props.history.push(`/places?query=${this.state.searchValue}`);
+        // console.log(`/places?query=${this.state.searchValue}`)
+        // this.props.history.push(`/places?query=${this.state.searchValue}`);
     }
 
     componentDidMount(){
         console.log(this.state.data)
     }
 
-    redirectSearch(){
+    redirectSearch = (selectedData, searchParam) => {
         const { history } = this.props;
+        const { data } = this.state;
+        history.push({
+            pathname: `/${data[0].province}/${searchParam}`,
+            selectedData
+         })
     }
 
+  
     onSearchValueChange = (e) => {
         this.setState({
             searchValue: e.target.value
@@ -116,7 +120,11 @@ class IndexComponent extends React.Component{
                                 <i class="fa fa-map-marker fa-lg"></i>
                             </span>
                             <div class="panel">
-                            <SuggestionBox data={data} searchTerm={searchValue}/>
+                            <SuggestionBox 
+                                data={data} 
+                                searchTerm={searchValue} 
+                                redirectSearch={this.redirectSearch}
+                            />
                             </div>
                         </div>
                         <div class="control">

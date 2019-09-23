@@ -10,6 +10,54 @@
 ::-webkit-scrollbar-thumb {
   background: #FF0000;
 }
+
+.loader-content{
+  width:420px;
+  height:160px;
+  margin-top:5px;
+}
+
+.loader-image{
+    width: 290px;
+    height: 190px;
+}
+
+.loader-price{
+  width: 200px;
+    height: 20px;
+    margin-top: 9px;
+}
+.loader-card{
+  background-color: #ffffff;
+  border-radius: 2px;
+  -webkit-box-shadow: 0px 1px 4px 8px rgba(251, 251, 251, 0.22);
+  -moz-box-shadow: 0px 1px 4px 8px rgba(251, 251, 251, 0.22);
+  box-shadow: 0px 1px 4px 8px rgba(251, 251, 251, 0.22);
+}
+
+.gradient {
+  animation-duration: 1.8s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-name: placeHolderShimmer;
+  animation-timing-function: linear;
+  background: #f6f7f8;
+  background: linear-gradient(to right, #fafafa 3%, #d0d1cd52 38%, #fafafa 84%);
+  background-size: 1000px 640px;
+  
+  position: relative;
+  
+}
+
+@keyframes placeHolderShimmer{
+  0%{
+      background-position: -468px 0
+  }
+  100%{
+      background-position: 468px 0
+  }
+}
+
 .panel-block{
   padding: 5px;
 }
@@ -41,6 +89,11 @@
   padding-top: 5px;
 
 }
+
+.selected-search{
+  border: 2px solid #448FFF;
+}
+
 .filter-control{
   padding-left: 10px;
   padding-top: 10px;

@@ -224,7 +224,7 @@ const ListSchema = new Schema({
 const List = mongoose.model('List', ListSchema);
 const Feature = mongoose.model('Feature', FeatureSchema);
 
-
+ListSchema.index({ address: 1, city: 1, zip:1, province: 1}); // schema level
 
 module.exports = {
     List,

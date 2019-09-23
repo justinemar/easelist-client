@@ -1,6 +1,6 @@
 import React from 'react';
-import ReactMapGL, { Marker, Popup }  from 'react-map-gl';
-
+import ReactMapGL, { Marker, LinearInterpolator, FlyToInterpolator}  from 'react-map-gl';
+import { easeCubic } from 'd3-ease';
 
 
 const featureCollection = {
@@ -84,45 +84,137 @@ const featureCollection = {
 	]
 }
 
+const featureCollection1 = {
+	"features": [
+	  {
+		
+		"title": "room for rent newly refurnised apartment ",
+		"description": "looking for a newly refurnied aprtment? with lots of amenities including free wifi, pets playground, free parking, free netflix",
+		"startingPrice": 5000,
+		"city": "calamba",
+		"province": "laguna",
+		"feature": {
+		  "geometry": {
+			"type": "Point",
+			"coordinates": [
+			  121.17397400000002,
+			  14.221998
+			]
+		  },
+		  "_id": "5d86327f912528190865afca"
+		},
+		"address": "villa de calamba, blk 64 lot 23, phase 3"
+	  },
+	  {
+		"title": "laguna area bedspacer now available",
+		"description": "limited bedspace slots contact for details laguna area",
+		"startingPrice": 1500,
+		"city": "calamba",
+		"province": "laguna",
+		"feature": {
+		  "geometry": {
+			"type": "Point",
+			"coordinates": [
+			  120.9738,
+			  14.59992
+			]
+		  },
+		  "_id": "5d8631b4912528190865afc8"
+		},
+		"address": "Villa Remedios Subdivision – Blk-05 Lot-05 – Brgy. Salitran III, City of Calamba, Laguna"
+	  }
+	]
+  }
 class MapGLRenderer extends React.Component{
     constructor(props){
-        super(props);
+		super(props);
         this.state = {
             viewport:{
-                latitude: 12.8797207,
-                longitude: 121.7740173,
-                width: "100vw",
-                height: "100%",
-                zoom: 10,
-                center: [121.7740173, 12.8797207]
-
-              },
+                latitude: 13.1162,
+                longitude: 121.0794,
+                width: "100%",
+                height: "100vh" /*100% */,
+                zoom: 12,
+				center: [13.1162, 121.0794],
+				transitionDuration: 5000,
+				transitionInterpolator: new FlyToInterpolator(),
+				transitionEasing: easeCubic
+			  },
+			  toMark: {
+				  features: []
+			  },
               token: 'pk.eyJ1IjoiYmVyYmVyb2thIiwiYSI6ImNrMG90cnpzNTA5YzUzbmtyMjFlano1ZDYifQ.pBd7NWQF3lCnVQWH8xeliQ'
         }
     }
-    
-    componentDidMount(){
+	
+	componentDidUpdate(prevProps){
+		if (prevProps.mapProperties.position.lat !== this.props.mapProperties.position.lat) {
+			const transition = {
+				...this.state.viewport,
+				latitude: this.props.mapProperties.position.lat,
+				longitude:  this.props.mapProperties.position.lng,
+				center: [ this.props.mapProperties.position.lat,  this.props.mapProperties.position.lng]
+			}
+				this.handleViewPortChange(transition)
+		  }
 
-    }
+	  }
+
+	static getDerivedStateFromProps(props, state){
+    // Are we adding new items to the list?
+    // Capture the scroll position so we can adjust scroll later.
+    if (props.queryResult.features.length !== state.toMark.features.length) {
+		return {
+		  toMark: props.queryResult,
+		};
+	  }
+	  return null;
+	}
 
     setSelectedPark(park){
         console.log(park);
     }
 
+	handleViewPortChange= (viewport) =>{
+		this.setState({
+			viewport
+		});
+	}
+
+
     render(){
-        const { viewport, token } = this.state;
+		const { viewport, token , toMark} = this.state;
+		const marker = toMark && toMark.features.length ? (
+			toMark.features.map(source => (
+				<Marker
+				latitude={source.feature.geometry.coordinates[1]}
+				longitude={source.feature.geometry.coordinates[0]}
+			>
+				<button
+				className="marker"
+				onClick={e => {
+					e.preventDefault();
+					this.setSelectedPark(source);
+				}}
+				>
+				</button>
+			</Marker> )
+			)
+		) : null
+		
         return(
             <ReactMapGL
-                    {...viewport}
-                    mapboxApiAccessToken={token}
+					{...viewport}
+					mapboxApiAccessToken={token}
+
                     mapStyle="mapbox://styles/berberoka/ck0p00jjm1vfl1co2kyhqfrik"
-                    onViewportChange={(viewport) => this.setState({viewport})}
-                >
-                    {featureCollection.features.map(park => (
+                    onViewportChange={(viewport) => this.handleViewPortChange(viewport)}
+                	>	
+                    {toMark && toMark.features.length ? (
+						toMark.features.map(park => (
                     <Marker
-                        key={park.properties.listID}
-                        latitude={park.geometry.coordinates[1]}
-                        longitude={park.geometry.coordinates[0]}
+                        latitude={park.feature.geometry.coordinates[1]}
+                        longitude={park.feature.geometry.coordinates[0]}
                     >
                         <button
                         className="marker"
@@ -133,7 +225,8 @@ class MapGLRenderer extends React.Component{
                         >
                         </button>
                     </Marker>
-                    ))}
+					))) : null}
+			
             </ReactMapGL>
         )
     }

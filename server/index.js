@@ -67,14 +67,31 @@ app.post('/api/search', (req, res) => {
                 }
             ]
         }
+    }, {       
+        $project: {
+            province:1,
+            title: 1,
+            description:1,
+            startingPrice: 1,
+            address: 1,
+            city: 1,
+            feature: 1,
+            _id: 0
+        }   
     }], (err, data) => {
         if(err){
             return res.json(err)
         }
 
-        if(data){
-            return res.json(data);
-        }
+        List.populate(data, {path: 'feature', select: 'geometry type'}, (err, populatedData) => {
+                if(err){
+                    return res.json(err)
+                }
+
+                if(populatedData){
+                    res.json(populatedData)
+                }
+        })
     })
 
 })
