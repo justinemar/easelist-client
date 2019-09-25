@@ -1,6 +1,7 @@
-import React from 'react';
+import React, {createRef} from 'react';
 import queryString from 'query-string'
 import MapGLRenderer from '../mapgl/index';
+import { PropertyConsumer } from '../../contexts/properties-context';
 // const staticData = [{
 //   "_id":"039e8dhf8w749f0",
 //   "publisher": "Yll Peng",
@@ -114,132 +115,89 @@ const staticData = {
 
   function CardLoader(){
     return(
-      <div class="columns is-gapless media-left is-marginless">
-      <div class="column">
-        <div class="card media">
-          <div class="loader-card card-image property-image" style={{width: '293px'}}>
-            <div class="loader-image gradient image is-4by3">
-          
-            </div>
-            <footer class="card-footer">
-          <a href="#" class="gradient button card-footer-item" style={{border: '0px'}}></a>
-          <a href="#" class="gradient button card-footer-item" style={{border: '0px'}}></a>
-          </footer>
-          </div>
-          <div class="media-conent card-content">
-          <header class="card-header gradient">
+      <div class="property-card loader-card-hover">
+      <div class="property-image-wrapper">
+          <div class="loader-card gradient property-image"></div>
 
-              <a href="#" class="card-header-icon" aria-label="more options">
-                <span class="icon">
-                  <i class="fa fa-angle-down" aria-hidden="true"></i>
-                </span>
-              </a>
-          </header>
-          <strong>
-          <p class="gradient loader-price"></p>
-            </strong>
-              <div class="gradient loader-content">
-
-              </div>
-          </div>
-        </div>
-        </div>
-  </div>
-    )
-  }
-  function ResultCard({queryResult}){
-    return (
-      <div class="columns is-gapless media-left is-marginless">
-          <div class="column">
-            <div class="card media">
-              <div class="card-image property-image" style={{width: '1200px'}}>
-                <div class="image is-4by3">
-                  <img src="https://www.lamudi.com.ph/static/media/bm9uZS9ub25l/2x2x2x380x244/acf06097e27f7f.jpg" alt="Placeholder image"/>
-                </div>
-                <footer class="card-footer">
-              <a href="#" class="button is-info is-outlined card-footer-item">Save</a>
-              <a href="#" class="button is-info is-outlined card-footer-item">Contact</a>
-              </footer>
-              </div>
-              <div class="media-conent card-content">
-              <header class="card-header">
-                  <p class="card-header-title">
-                  STUDIO TYPE APARTMENT
-                  </p>
-                  <a href="#" class="card-header-icon" aria-label="more options">
-                    <span class="icon">
-                      <i class="fas fa-angle-down" aria-hidden="true"></i>
-                    </span>
-                  </a>
-              </header>
-              <strong>
-              <p class="is-size-6">₱ 6,000,000</p>
-                </strong>
-                  <div class="content is-size-6">
-                    Breathe comfort & tranquility into your life at Southwind, a refreshing community nestled in the heights of San Pedro, Laguna. With modern Asian-inspired homes and inspiring views of Laguna de Bay, Southwind is a relaxing haven with a vacation ambiance.
-                    <br/>
-                    <strong>
-                    <p class="is-size-6">Makati Avenue, 1002 Street Global Park</p>
-                    <p class="is-size-6">2 Baths</p>
-                      </strong>
-                  </div>
-              </div>
-            </div>
-            </div>
       </div>
+      <div class="property-details-wrapper has-text-black is-size-7">
+       <h1 class="loader-title gradient"></h1>
+          <p class="loader-bar gradient"></p>
+          <p class="loader-bar gradient"></p>
+          <p class="loader-bar gradient"></p>
+      </div>
+   </div>
     )
   }
 
-  function SelectedSearch({selectedSearch}){
-      let selected;
-      if(selectedSearch){
-        selected = (
-          <div class="column selected-search">
-          <h4>Selected Search</h4>
-        <div class="card media">
-          <div class="card-image property-image" style={{width: '1200px'}}>
-            <div class="image is-4by3">
-              <img src="https://www.lamudi.com.ph/static/media/bm9uZS9ub25l/2x2x2x380x244/acf06097e27f7f.jpg" alt="Placeholder image"/>
-            </div>
-            <footer class="card-footer">
-          <a href="#" class="button is-info is-outlined card-footer-item">Save</a>
-          <a href="#" class="button is-info is-outlined card-footer-item">Contact</a>
-          </footer>
-          </div>
-          <div class="media-conent card-content">
-          <header class="card-header">
-              <p class="card-header-title">
-              {selectedSearch.title}
-              </p>
-              <a href="#" class="card-header-icon" aria-label="more options">
-                <span class="icon">
-                  <i class="fas fa-angle-down" aria-hidden="true"></i>
-                </span>
-              </a>
-          </header>
-          <strong>
-          <p class="is-size-6">₱{selectedSearch.startingPrice}</p>
-            </strong>
-              <div class="content is-size-6">
-              {selectedSearch.description}
-                <br/>
-                <strong>
-                <p class="is-size-6">{selectedSearch.address}</p>
-                <p class="is-size-6">2 Baths</p>
-                  </strong>
-              </div>
-          </div>
-        </div>
-        </div>
-        )
-      } else {
-    
-        selected = (
-          <div>No selection</div>
-        )
+//   display: flex;
+//   flex-direction: column;
+//   width: 100%;
+//   height: 100%;
+
+//   display: flex;
+//     flex-direction: column;
+//     width: 100%;
+//     height: 100%;
+// }
+
+
+  function ResultCard({refs, queryResult, showPopUp, selectedProperty}){
+    let isHighlighted = '_x17sx';
+
+    return (
+    queryResult && queryResult.features.length ? queryResult.features.map((data, key) => {
+      if(data && selectedProperty.feature){
+        isHighlighted = data.feature._id === selectedProperty.feature._id ? 'selected-search' : '_x17sx'
+
       }
 
-      return selected;
+      const handleMouseOver = () => {
+        showPopUp(data)
+      }
+
+      const handleMouseOut = () => {
+        showPopUp([])
+      }
+      return (
+        
+        <div ref={refs[data.feature._id]} key={data.feature._id} class={`property-card ${isHighlighted}`} onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}>
+          <div class="property-image-wrapper">
+              <div class="property-image" style={{backgroundImage: 'url(https://www.lamudi.com.ph/static/media/bm9uZS9ub25l/2x2x2x380x244/acf06097e27f7f.jpg)'}}></div>
+ 
+          </div>
+          <div class="property-details-wrapper has-text-black is-size-7">
+           <h1 class="is-size-6">{data.title}</h1>
+              <p class="is-size-5"><strong>₱{data.startingPrice}</strong></p>
+              <p class="is-size-6" style={{fontWeight: 500}}>{data.description}</p>
+            <div class="property-control">
+              <a class="button is-primary">Contact</a>
+            </div>
+          </div>
+       </div>
+      );
+
+    }) : <CardLoader/>
+    )
+  }
+
+  function SelectedSearch(){
+    return(
+      <div class="property-card">
+      <div class="property-image-wrapper">
+          <div class="property-image" style={{backgroundImage: 'url(https://www.lamudi.com.ph/static/media/bm9uZS9ub25l/2x2x2x380x244/acf06097e27f7f.jpg)'}}></div>
+
+      </div>
+      <div class="property-details-wrapper has-text-black is-size-7">
+       <h1 class="is-size-6">amazing new apartment</h1>
+          <p class="is-size-5"><strong>₱515151</strong></p>
+          <p class="is-size-6" style={{fontWeight: 500}}>you'll be amazeddddd</p>
+        <div class="property-control">
+          <a class="button is-primary">Contact</a>
+        </div>
+      </div>
+   </div>
+    )
   }
   class SearchResult extends React.Component{
       constructor(props){
@@ -247,9 +205,6 @@ const staticData = {
           const param = props.match.params.searchParam;
         console.log(param, props.match.params)
           this.state = {
-            queryResult: {
-              features: []
-            },
               inputs: {
                 query: param,
                 refinements: ['APARTMENT', 'CONDOS', 'TOWNHOUSE', 'HOUSES'],
@@ -288,20 +243,9 @@ const staticData = {
 
           })
       }
-
-      getRelatedResults(){
-        const { inputs } = this.state;
-        fetch(`/api/search?query=${inputs.query}`, {
-          method: 'POST'
-        })
-        .then((res) => {
-            res.json().then(parsed => this.setState({queryResult:{features: parsed}}))
-        })
-      }
       
       componentWillMount(){
         this.mapSearch()
-        this.getRelatedResults()
       }
 
       componentDidMount(){
@@ -340,81 +284,100 @@ const staticData = {
 
       render(){
           const { query } = this.state.inputs;
-          const { queryResult, selectedSearch, mapProperties, newSearchValue } = this.state;
-          const resultsText = selectedSearch ? `Other Properties found in ${query}` : `Properties found in ${query}`
+          const {  mapProperties, newSearchValue } = this.state;
+
           return (
-            <div class="section is-paddingless">
-        <div class="columns">
-        { queryResult !== null ? 
-              <div class="column properties">
-                <div class="filter-control">
-                <div class="field has-addons">
-                  <p class="control has-icons-left">
-                    <input class="input is-info is-rounded" type="text" placeholder="place, zip, neighborhood" value={newSearchValue} onChange={this.handleChange}/>
-                    <span class="icon is-small is-left">
-                      <i class="fa fa-map-marker"></i>
-                    </span>
-                  </p>
-                  <p class="control">
-                    <span class="select is-info">
-                      <select>
-                        <option>Max Price (₱)</option>
-                        <option>₱1,000</option>
-                        <option>₱2,000</option>
-                      </select>
-                    </span>
-                  </p>
-                  <p class="control">
-                    <a class="button is-primary">
-                      More filters
-                    </a>
-                  </p>
-              </div>
-              <div class="field">
-                <div class="control">
-                  <input class="is-checkradio" id="exampleRadioInline1" type="radio" name="exampleRadioInline" checked="checked"/>
-                  <label for="exampleRadioInline1">Rent</label>
-                  <input class="is-checkradio" id="exampleRadioInline2" type="radio" name="exampleRadioInline"/>
-                  <label for="exampleRadioInline2">Buy</label>
+            <PropertyConsumer>
+            {props => {
+              
+              return(
+                
+                <div class="section is-paddingless">
+                <div class="columns">
+                { props.queryResult !== null ? 
+                      <div class="column properties">
+                        <div class="filter-control">
+                        <div class="field has-addons">
+                          <p class="control has-icons-left">
+                            <input class="input is-info is-rounded" type="text" placeholder="place, zip, neighborhood" value={newSearchValue} onChange={this.handleChange}/>
+                            <span class="icon is-small is-left">
+                              <i class="fa fa-map-marker"></i>
+                            </span>
+                          </p>
+                          <p class="control">
+                            <span class="select is-info">
+                              <select>
+                                <option>Max Price (₱)</option>
+                                <option>₱1,000</option>
+                                <option>₱2,000</option>
+                              </select>
+                            </span>
+                          </p>
+                          <p class="control">
+                            <a class="button is-primary">
+                              More filters
+                            </a>
+                          </p>
+                      </div>
+                      <div class="field">
+                        <div class="control">
+                          <input class="is-checkradio" id="exampleRadioInline1" type="radio" name="exampleRadioInline" checked="checked"/>
+                          <label for="exampleRadioInline1">Rent</label>
+                          <input class="is-checkradio" id="exampleRadioInline2" type="radio" name="exampleRadioInline"/>
+                          <label for="exampleRadioInline2">Buy</label>
+                        </div>
+                      </div>
+        
+                      <div class="result-header field has-addons">
+                        <div class="control result-count">
+                        <p class="subtitle is-5 has-text-dark	">
+                            <strong class="has-text-black">{props.queryResult.features.length} Properties found</strong>
+                          </p>
+                        </div>
+                          <p class="control">
+                              <span class="select is-info">
+                                <select>
+                                  <option>Best Match</option>
+                                  <option>Lowest Price</option>
+                                  <option>Highest Price</option>
+                                  <option>Most popular</option>
+                                </select>
+                              </span>
+                            </p>
+                        </div>
+                      </div>
+                      <div class="property-container">
+         
+                      <PropertyConsumer>
+                        {props => {
+                          
+                          return(
+                            
+                            <ResultCard 
+                              showPopUp={(item) => props.setSelectedProperty(item)} 
+                              selectedProperty={props.selectedProperty} 
+                              queryResult={props.queryResult}
+                              refs={props.refs}
+                              />
+                          
+                            )
+                        }}
+                      </PropertyConsumer>
+                    
+                      </div>
+             
+                      </div> 
+        
+                      : <h1>Loading </h1>}
+                      <div class="column map-column">
+                      <MapGLRenderer mapProperties={mapProperties} queryResult={props.queryResult}/>
+                      </div>
+                  </div>
                 </div>
-              </div>
-              <SelectedSearch selectedSearch={selectedSearch}/>
-
-              <div class="field has-addons">
-                <div class="control result-count">
-                <p class="subtitle is-5 has-text-dark	">
-                    <strong class="has-text-black">5</strong> {resultsText}
-                  </p>
-                </div>
-                  <p class="control">
-                      <span class="select is-info">
-                        <select>
-                          <option>Best Match</option>
-                          <option>Lowest Price</option>
-                          <option>Highest Price</option>
-                          <option>Most popular</option>
-                        </select>
-                      </span>
-                    </p>
-                </div>
-              </div>
-              {queryResult && queryResult.features.length ? queryResult.features.map((data, key) => (
-                  <ResultCard data={data}/>
-              )) : 
-                <>
-              <CardLoader/>
-              <CardLoader/>
-                </>
-              }
-     
-              </div> 
-
-              : <h1>Loading </h1>}
-              <div class="column map-column">
-              <MapGLRenderer mapProperties={mapProperties} queryResult={queryResult}/>
-              </div>
-          </div>
-        </div>
+              
+                )
+            }}
+          </PropertyConsumer>
           )
       }
   }

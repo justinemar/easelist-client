@@ -1,7 +1,8 @@
-import React from 'react';
-import ReactMapGL, { Marker, LinearInterpolator, FlyToInterpolator}  from 'react-map-gl';
+import React , { useContext } from 'react';
+import ReactMapGL, { Marker, LinearInterpolator, FlyToInterpolator, Popup }  from 'react-map-gl';
 import { easeCubic } from 'd3-ease';
-
+import { PropertyConsumer } from '../../contexts/properties-context';
+import './index.css';
 
 const featureCollection = {
 	"type": "FeatureCollection",
@@ -125,6 +126,12 @@ const featureCollection1 = {
 	  }
 	]
   }
+
+
+function AddMapLayer({features}){
+	
+}
+
 class MapGLRenderer extends React.Component{
     constructor(props){
 		super(props);
@@ -138,11 +145,13 @@ class MapGLRenderer extends React.Component{
 				center: [13.1162, 121.0794],
 				transitionDuration: 5000,
 				transitionInterpolator: new FlyToInterpolator(),
-				transitionEasing: easeCubic
+				transitionEasing: easeCubic,
+				maxZoom: 12
 			  },
 			  toMark: {
 				  features: []
 			  },
+			  mounted: false,
               token: 'pk.eyJ1IjoiYmVyYmVyb2thIiwiYSI6ImNrMG90cnpzNTA5YzUzbmtyMjFlano1ZDYifQ.pBd7NWQF3lCnVQWH8xeliQ'
         }
     }
@@ -171,63 +180,82 @@ class MapGLRenderer extends React.Component{
 	  return null;
 	}
 
-    setSelectedPark(park){
-        console.log(park);
-    }
+
+	componentDidMount(){
+		this.setState({
+			mounted: true
+		})
+
+	}
+
 
 	handleViewPortChange= (viewport) =>{
-		this.setState({
-			viewport
-		});
+		const { mounted } = this.state;
+		// Avoid dangerous state change on state transition
+		if(mounted){
+			this.setState({
+				viewport
+			});
+		}
 	}
 
 
     render(){
-		const { viewport, token , toMark} = this.state;
-		const marker = toMark && toMark.features.length ? (
-			toMark.features.map(source => (
-				<Marker
-				latitude={source.feature.geometry.coordinates[1]}
-				longitude={source.feature.geometry.coordinates[0]}
-			>
-				<button
-				className="marker"
-				onClick={e => {
-					e.preventDefault();
-					this.setSelectedPark(source);
-				}}
-				>
-				</button>
-			</Marker> )
-			)
-		) : null
-		
+		const { viewport, token , toMark } = this.state;
         return(
-            <ReactMapGL
-					{...viewport}
-					mapboxApiAccessToken={token}
-
-                    mapStyle="mapbox://styles/berberoka/ck0p00jjm1vfl1co2kyhqfrik"
-                    onViewportChange={(viewport) => this.handleViewPortChange(viewport)}
-                	>	
-                    {toMark && toMark.features.length ? (
-						toMark.features.map(park => (
-                    <Marker
-                        latitude={park.feature.geometry.coordinates[1]}
-                        longitude={park.feature.geometry.coordinates[0]}
-                    >
-                        <button
-                        className="marker"
-                        onClick={e => {
-                            e.preventDefault();
-                            this.setSelectedPark(park);
-                        }}
-                        >
-                        </button>
-                    </Marker>
-					))) : null}
-			
-            </ReactMapGL>
+			<PropertyConsumer>
+				{props => {
+					return (
+						<ReactMapGL
+						{...viewport}
+						mapboxApiAccessToken={token}
+	
+						mapStyle="mapbox://styles/berberoka/ck0p00jjm1vfl1co2kyhqfrik"
+						onViewportChange={(viewport) => this.handleViewPortChange(viewport)}
+						>	
+						{toMark && toMark.features.length ? (
+							toMark.features.map(prop => (
+						<Marker
+							latitude={prop.feature.geometry.coordinates[1]}
+							longitude={prop.feature.geometry.coordinates[0]}
+						>
+							<button
+							className="marker"
+							onClick={e => {
+								e.preventDefault();
+								props.setSelectedProperty(prop);
+								props.setScrollToView(prop.feature._id)
+							}}
+							>
+							</button>
+						</Marker>
+						))) : null}
+					{props.selectedProperty && props.selectedProperty.feature ? (
+						<Popup
+						latitude={props.selectedProperty.feature.geometry.coordinates[1]}
+						longitude={props.selectedProperty.feature.geometry.coordinates[0]}
+						onClose={() => {
+							props.setSelectedProperty([]);
+						}}
+						>
+						<div className="property-popup-container">
+							<div className="property-popup-image">
+							<img style={{width:'100%', height:'100%'}} src="https://www.lamudi.com.ph/static/media/bm9uZS9ub25l/2x2x2x380x244/acf06097e27f7f.jpg" alt="Placeholder image"/>
+							</div>
+							<div className="property-popup-details">
+								<strong>
+									<p className="is-size-6">₱{props.selectedProperty.startingPrice}</p>
+									</strong>
+								<p className="has-text-black">{props.selectedProperty.address}</p>
+								<a href="#" class="has-text-primary">Contact Property</a>
+							</div>
+						</div>
+						</Popup>
+					) : null}
+				</ReactMapGL>
+					)
+				}}
+			</PropertyConsumer>
         )
     }
 }

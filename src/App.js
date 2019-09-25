@@ -4,6 +4,8 @@ import logo from './logo.svg';
 import IndexComponent from './components/index';
 import SearchResult from './components/SearchResult/index';
 import HeaderComponent from './components/Header/header';
+import { PropertyProvider } from './contexts/properties-context';
+
 import './App.scss';
 // import 'bulma/css/bulma.css'
 
@@ -20,7 +22,13 @@ function App() {
       <HeaderComponent/>
       <Router>
         <Route exact path="/" render={(props) => <IndexComponent {...props}/>} />
-        <Route exact path="/:provinceParam/:searchParam" render={(props) => <SearchResult {...props}/>} />
+
+        <Route exact path="/:provinceParam/:searchParam" render={(props) => (
+          <PropertyProvider {...props}>
+            <SearchResult {...props}/>
+          </PropertyProvider>
+        )} />
+
         <Route exact path="/:province/" component={Province} />
       </Router>
     </div>
