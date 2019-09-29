@@ -1,4 +1,3 @@
-
 /* 
 .App-header {
   background-color: #282c34;
@@ -14,24 +13,24 @@
 @charset "utf-8";
 
 // Import a Google Font
-@import url('https://fonts.googleapis.com/css?family=Nunito:400,700');
+@import url("https://fonts.googleapis.com/css?family=Nunito:400,700");
 
 // Set your brand colors
-$purple: #8A4D76;
-$pink: #FA7C91;
+$purple: #8a4d76;
+$pink: #fa7c91;
 $brown: #757763;
-$just-white:#ffffff;
-$beige-light: #D0D1CD;
-$beige-lighter: #EFF0EB;
-$brand: #448FFF;
+$just-white: #ffffff;
+$beige-light: #d0d1cd;
+$beige-lighter: #eff0eb;
+$brand: #448fff;
 // Update Bulma's global variables
-$title-color:$just-white;
-$title-size:3.9rem;
-$subtitle-strong-color:$just-white;
-$subtitle-color:$just-white;
-$navbar-item-color:$just-white;
-$navbar-item-hover-background-color:transparent !default;
-$body-color:$just-white;
+$title-color: $just-white;
+$title-size: 3.9rem;
+$subtitle-strong-color: $just-white;
+$subtitle-color: $just-white;
+$navbar-item-color: $just-white;
+$navbar-item-hover-background-color: transparent !default;
+$body-color: $just-white;
 $family-sans-serif: "Nunito", sans-serif;
 $grey-dark: $brown;
 $grey-light: $beige-light;
@@ -39,7 +38,7 @@ $primary: $purple;
 $link: $just-white;
 $widescreen-enabled: false;
 $fullhd-enabled: false;
-$navbar-background-color:#448FFF;
+$navbar-background-color: #448fff;
 $navbar-item-hover-color: #e4e4ea !default;
 // Update some of Bulma's component variables
 $body-background-color: $beige-lighter;
@@ -56,6 +55,7 @@ $input-shadow: none;
 @import "../node_modules/bulma/sass/form/_all.sass";
 @import "../node_modules/bulma/sass/components/navbar.sass";
 @import "../node_modules/bulma/sass/components/media.sass";
+@import "../node_modules/bulma/sass/components/modal.sass";
 @import "../node_modules/bulma/sass/components/card.sass";
 @import "../node_modules/bulma/sass/layout/hero.sass";
 @import "../node_modules/bulma/sass/layout/section.sass";
@@ -63,17 +63,16 @@ $input-shadow: none;
 @import "../node_modules/bulma-divider/src/sass/index.sass";
 @import "../node_modules/bulma-checkradio/src/sass/index.sass";
 
-#app{
-  background:#448FFF;
+#app {
+  background: #448fff;
 }
 /* .hero{
   background:#448FFF;
   min-height: 100vh;
 } */
 
-.section{
-  background:#448FFF;
+.section {
+  background: #448fff;
   min-height: 100vh;
   text-align: center;
 }
-
