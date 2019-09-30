@@ -13,7 +13,6 @@ export class AuthService extends React.Component {
   componentDidMount() {
     const { history } = this.props;
     if (!this._validSession()) {
-      console.log("invalid");
       this.setState({
         loginPopUp: true,
         isAuthenticated: false
@@ -33,8 +32,10 @@ export class AuthService extends React.Component {
   }
 
   _getUserData() {
+    const token = localStorage.getItem("token");
     // mock decode token
-    return localStorage.getItem("token");
+    const data = decode(token);
+    return data;
   }
 
   _validSession = () => {
@@ -56,10 +57,13 @@ export class AuthService extends React.Component {
   };
 
   _setToken = user => {
+    const { history } = this.props;
     this.setState({
       isAuthenticated: true,
       loginPopUp: false
     });
+
+    history.push("/user/profile");
     localStorage.setItem("token", user);
   };
 

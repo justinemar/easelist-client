@@ -1,50 +1,53 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import logo from "./logo.svg";
-import IndexComponent from "./components/index";
-import SearchResult from "./components/SearchResult/index";
-import { ModalProvider } from "./components/accountForm/index";
-import HeaderComponent from "./components/Header/header";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { AuthServiceWithRouter } from "./utils/index";
 import { PropertyProvider } from "./contexts/properties-context";
-
+import { ModalProvider } from "./components/accountForm/index";
+import IndexComponent from "./components/index";
+import SearchResult from "./pages/SearchResult/index";
+import HeaderComponent from "./components/Header/header";
+import UserProfile from "./pages/profile";
 import "./App.scss";
 // import 'bulma/css/bulma.css'
 
 function Province() {
   return (
     <div>
-      <h1>No match</h1>
+      <h1>Provinces.</h1>
     </div>
   );
 }
 function App() {
   return (
     <div className="App">
-      <AuthServiceWithRouter>
-        <ModalProvider>
-          <HeaderComponent />
-        </ModalProvider>
-        <Router>
-          <Route
-            exact
-            path="/"
-            render={props => <IndexComponent {...props} />}
-          />
-
-          <Route
-            exact
-            path="/:provinceParam/:searchParam"
-            render={props => (
-              <PropertyProvider {...props}>
-                <SearchResult {...props} />
-              </PropertyProvider>
-            )}
-          />
-
-          <Route exact path="/:province/" component={Province} />
-        </Router>
-      </AuthServiceWithRouter>
+      <Router>
+        <AuthServiceWithRouter>
+          <ModalProvider>
+            <HeaderComponent />
+          </ModalProvider>
+          <Switch>
+            <Route
+              exact
+              path="/"
+              render={props => <IndexComponent {...props} />}
+            />
+            <Route
+              path="/user/profile"
+              render={props => <UserProfile {...props} />}
+            />
+            <Route path="/:provinceParam/" component={Province} />
+            <Route
+              path="/:provinceParam/:searchParam"
+              render={props => (
+                <PropertyProvider {...props}>
+                  <SearchResult {...props} />
+                </PropertyProvider>
+              )}
+            />
+          </Switch>
+        </AuthServiceWithRouter>
+      </Router>
     </div>
   );
 }

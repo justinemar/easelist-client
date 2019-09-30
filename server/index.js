@@ -56,7 +56,7 @@ app.use(express.static(path.resolve(__dirname, '../public')));
 
 app.post('/api/search', (req, res) => {
     const { query } = req.query;
-    if(query === ''){
+    if (query === '') {
         return res.json([])
     }
     console.log(query)
@@ -89,30 +89,30 @@ app.post('/api/search', (req, res) => {
                 }
             ]
         }
-    }, {       
+    }, {
         $project: {
-            province:1,
+            province: 1,
             title: 1,
-            description:1,
+            description: 1,
             startingPrice: 1,
             address: 1,
             city: 1,
             feature: 1,
             _id: 0
-        }   
+        }
     }], (err, data) => {
-        if(err){
+        if (err) {
             return res.json(err)
         }
 
-        List.populate(data, {path: 'feature', select: 'geometry type'}, (err, populatedData) => {
-                if(err){
-                    return res.json(err)
-                }
+        List.populate(data, { path: 'feature', select: 'geometry type' }, (err, populatedData) => {
+            if (err) {
+                return res.json(err)
+            }
 
-                if(populatedData){
-                    res.json(populatedData)
-                }
+            if (populatedData) {
+                res.json(populatedData)
+            }
         })
     })
 
@@ -125,28 +125,28 @@ app.post('/api/verify', (req, res) => {
 
     var payloadObj = JSRSASign.KJUR.jws.JWS.readSafeJSONString(JSRSASign.b64toutf8(token.split(".")[1]));
     console.log(payloadObj)
-    isValid = JSRSASign.KJUR.jws.JWS.verifyJWT(token, "$PraveenIsNotAwesome!", {alg: ["HS512"]});
+    isValid = JSRSASign.KJUR.jws.JWS.verifyJWT(token, "$PraveenIsNotAwesome!", { alg: ["HS512"] });
     res.send(isValid)
 
 })
 
 app.post('/api/account', async (req, res) => {
     const { email, password } = req.body;
-    try{
+    try {
         const user = await Account.findOne({ email }).select('+password').exec();
-        if(!user) {
+        if (!user) {
 
             return res.status(404).json({ message: "The email address is not associated with any account" });
         }
 
         user.comparePassword(password, (err, match) => {
-            if (err) return err; 
+            if (err) return err;
 
-            if(!match) {
+            if (!match) {
 
                 return res.status(401).json({ message: "The email address or password is incorrect" });
             }
-            
+
             const EXPIRATION = 60 * 60 // 1 hour
             const sPayload = JSON.stringify({
                 first_name: user.first_name,
@@ -160,15 +160,14 @@ app.post('/api/account', async (req, res) => {
             const sHeader = JSON.stringify({
                 alg: "HS512",
                 typ: "JWT"
-              })
-
+            })
             const sJWT = JSRSASign.jws.JWS.sign("HS512", sHeader, sPayload, key);
 
             return res.status(200).json(sJWT);
         })
 
     } catch (err) {
-        return res.status(500).json({message: err})
+        return res.status(500).json({ message: err })
     }
 })
 
@@ -183,16 +182,16 @@ app.put('/api/account', async (req, res) => {
         home_number
     });
 
-    try{
+    try {
         const userData = await user.save();
         return res.json(userData)
 
-    } catch(err) {
-        if(err.name === 'MongoError' && err.code === 11000){
-            return res.status(409).json({errmsg: 'Account with the same email exists'})
+    } catch (err) {
+        if (err.name === 'MongoError' && err.code === 11000) {
+            return res.status(409).json({ errmsg: 'Account with the same email exists' })
         }
 
-        return res.status(501).json({message: 'Unknown error occured us'})
+        return res.status(501).json({ message: 'Unknown error occured us' })
     }
 
 })

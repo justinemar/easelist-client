@@ -4,7 +4,7 @@ import { AuthServiceContext } from "../../utils/index";
 
 class Login extends React.Component {
   state = {
-    email: "mikeeolante@gmail.com",
+    email: "easelist@mail.com",
     password: "",
     responseProps: {
       status: "",
@@ -30,6 +30,7 @@ class Login extends React.Component {
   login = async e => {
     const { _defaultLogin, _setToken } = this.context;
     const { email, password } = this.state;
+    const { history } = this.props;
     const data = await _defaultLogin(email, password).catch(exception => {
       exception.json().then(error => {
         this.setState({
@@ -52,70 +53,70 @@ class Login extends React.Component {
     return (
       <>
         <>
-          <div class="is-divider has-text-black" data-content="OR"></div>
+          <div className="is-divider has-text-black" data-content="OR"></div>
           <p
-            class={`${responseProps.status} has-text-centered has-text-weight-semibold`}
+            className={`${responseProps.status} has-text-centered has-text-weight-semibold`}
           >
             {" "}
             {responseProps.message}{" "}
           </p>
-          <div class="field">
-            <label class="label">Email</label>
-            <div class="control has-icons-left has-icons-right">
+          <div className="field">
+            <label className="label">Email</label>
+            <div className="control has-icons-left has-icons-right">
               <input
-                class="input is-info"
+                className="input is-info"
                 type="email"
                 placeholder="johndoe@mail.com"
                 onChange={this.controlEmailChange}
                 value={email}
               />
-              <span class="icon is-small is-left">
-                <i class="fa fa-envelope"></i>
+              <span className="icon is-small is-left">
+                <i className="fa fa-envelope"></i>
               </span>
-              {/* <span class="icon is-small is-right">
-<i class="fa fa-check"></i>
+              {/* <span className="icon is-small is-right">
+<i className="fa fa-check"></i>
 </span> */}
             </div>
-            {/* <p class="help is-success">Success</p> */}
+            {/* <p className="help is-success">Success</p> */}
           </div>
 
-          <div class="field">
-            <label class="label">Password</label>
-            <div class="control has-icons-left has-icons-right">
+          <div className="field">
+            <label className="label">Password</label>
+            <div className="control has-icons-left has-icons-right">
               <input
-                class="input is-info"
+                className="input is-info"
                 type="password"
                 placeholder="**********"
                 onChange={this.controlPasswordChange}
                 value={password}
               />
-              <span class="icon is-small is-left">
-                <i class="fa fa-lock"></i>
+              <span className="icon is-small is-left">
+                <i className="fa fa-lock"></i>
               </span>
-              {/* <span class="icon is-small is-right">
-<i class="fa fa-exclamation-triangle"></i>
+              {/* <span className="icon is-small is-right">
+<i className="fa fa-exclamation-triangle"></i>
 </span> */}
             </div>
-            {/* <p class="help is-danger">This email is invalid</p> */}
+            {/* <p className="help is-danger">This email is invalid</p> */}
           </div>
-          <div class="field">
-            <p class="control">
+          <div className="field">
+            <p className="control">
               <button
-                class="button is-info is-fullwidth is-rounded"
+                className="button is-info is-fullwidth is-rounded"
                 onClick={this.login}
               >
                 Login
               </button>
             </p>
           </div>
-          <div class="is-divider has-text-black" data-content="OR"></div>
-          <div class="field has-addons has-addons-centered">
-            <p class="control has-text-black">New to easelist?</p>
+          <div className="is-divider has-text-black" data-content="OR"></div>
+          <div className="field has-addons has-addons-centered">
+            <p className="control has-text-black">New to easelist?</p>
           </div>
-          <div class="field has-addons has-addons-centered">
-            <p class="control">
+          <div className="field has-addons has-addons-centered">
+            <p className="control">
               <button
-                class="button is-info is-inverted"
+                className="button is-info is-inverted"
                 onClick={() => setDefaultForm(false)}
               >
                 Register for Free

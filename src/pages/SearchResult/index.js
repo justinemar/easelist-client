@@ -1,6 +1,6 @@
 import React, { createRef } from "react";
 import queryString from "query-string";
-import MapGLRenderer from "../mapgl/index";
+import MapGLRenderer from "../../components/mapgl/index";
 import { PropertyConsumer } from "../../contexts/properties-context";
 // const staticData = [{
 //   "_id":"039e8dhf8w749f0",
@@ -136,7 +136,7 @@ function CardLoader() {
 // }
 
 function ResultCard({ refs, queryResult, showPopUp, selectedProperty }) {
-  let isHighlighted = "_x17sx";
+  let isHighlighted = "";
 
   return queryResult && queryResult.features.length ? (
     queryResult.features.map((data, key) => {
@@ -144,7 +144,7 @@ function ResultCard({ refs, queryResult, showPopUp, selectedProperty }) {
         isHighlighted =
           data.feature._id === selectedProperty.feature._id
             ? "selected-search"
-            : "_x17sx";
+            : "";
       }
 
       const handleMouseOver = () => {

@@ -28,14 +28,14 @@ export function ModalProvider(props) {
         {props.children}
       </ModalContext.Provider>
       {modalShow ? (
-        <div class="modal is-active">
+        <div className="modal is-active">
           <div
-            class="modal-background"
+            className="modal-background"
             onClick={() => setModalShow(false)}
           ></div>
-          <div class="modal-content">{showForm}</div>
+          <div className="modal-content">{showForm}</div>
           <button
-            class="modal-close is-large"
+            className="modal-close is-large"
             aria-label="close"
             onClick={() => setModalShow(false)}
           ></button>
