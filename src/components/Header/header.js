@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { Link } from "react-router-dom";
 import "./index.scss";
 import { ModalContext } from "../accountForm";
 import { AuthServiceContext } from "../../utils/index";
@@ -41,7 +42,9 @@ function HeaderComponent() {
           )}
         </div>
         <div className="navbar-end">
-          <a className="navbar-item">List a property</a>
+          <Link to="/list" className="navbar-item">
+            List a property
+          </Link>
           <a className="navbar-item">Advertise with us</a>
         </div>
       </div>

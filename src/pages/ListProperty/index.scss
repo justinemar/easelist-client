@@ -1,0 +1,48 @@
+.listing-panel {
+  padding: 20px;
+  background: white;
+}
+
+.panel-wrapper {
+  padding: 0 !important;
+  overflow: scroll;
+  height: 100vh;
+  overflow-x: hidden;
+}
+
+.listing-popup-container {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  text-align: left;
+  padding: 5px;
+}
+
+.listing-popup-details {
+  font-weight: 600;
+  font-size: 0.75rem !important;
+  max-width: 255px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: pre-wrap;
+}
+
+.panel-wrapper::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+.panel-wrapper::-webkit-scrollbar-track {
+  background: #448fff;
+}
+
+/* Handle */
+.panel-wrapper::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+.panel-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

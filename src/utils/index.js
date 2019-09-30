@@ -33,7 +33,6 @@ export class AuthService extends React.Component {
 
   _getUserData() {
     const token = localStorage.getItem("token");
-    // mock decode token
     const data = decode(token);
     return data;
   }
@@ -56,15 +55,18 @@ export class AuthService extends React.Component {
     return localStorage.removeItem("token");
   };
 
-  _setToken = user => {
+  _setToken = token => {
     const { history } = this.props;
-    this.setState({
-      isAuthenticated: true,
-      loginPopUp: false
-    });
-
-    history.push("/user/profile");
-    localStorage.setItem("token", user);
+    localStorage.setItem("token", token);
+    const data = decode(token);
+    this.setState(
+      {
+        isAuthenticated: true,
+        loginPopUp: false,
+        userData: data
+      },
+      history.push("/dashboard")
+    );
   };
 
   isTokenExpired(token) {
@@ -107,7 +109,8 @@ export class AuthService extends React.Component {
     _defaultLogin: this._defaultLogin,
     _setToken: this._setToken,
     loginPopUp: false,
-    _logOut: this._logOut
+    _logOut: this._logOut,
+    _validSession: this._validSession
   };
 
   render() {
@@ -119,4 +122,5 @@ export class AuthService extends React.Component {
   }
 }
 
+export const AuthServiceConsumer = AuthServiceContext.Consumer;
 export const AuthServiceWithRouter = withRouter(AuthService);
