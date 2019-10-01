@@ -246,15 +246,19 @@ app.get('/api/list', (req, res) => {
 })
 
 app.post('/api/property', (req, res) => {
+    const extras = new Extras({
+
+    })
     const newList = new List({
         publisher: req.body.publisher_id,
         title: req.body.title,
         description: req.body.description,
-        startingPrice: req.body.startingPrice,
+        pricing: [req.body.startingPrice, req.body.deposit],
         zip: req.body.zip,
         city: req.body.city,
         province: req.body.province,
-        address: req.body.address
+        address: req.body.address,
+
     })
 
     newList.save((err, list) => {
