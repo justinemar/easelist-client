@@ -185,14 +185,18 @@ const FeatureSchema = new Schema({
 })
 
 
-const Addons = new Schema({
+const AddonSchema = new Schema({
+  property: {
+    type: Schema.Types.ObjectId,
+    ref: 'List'
+  },
   community_features: {
     type: Array
   },
   policy: {
-    dogs: Boolean,
-    cats: Boolean,
-    smoking: Boolean,
+    dogs: String,
+    cats: String,
+    smoking: String,
     detail: String
   },
   amenities: {
@@ -209,7 +213,9 @@ const Addons = new Schema({
     covered: String,
     garage: String
   },
-  extra_loc: [String]
+  extra_loc: {
+    type: Array
+  }
 })
 const ListSchema = new Schema({
   publisher: {
@@ -227,10 +233,12 @@ const ListSchema = new Schema({
   facts: {
     title: String,
     description: String,
-    numOfBed: Number,
-    numOfBath: Number,
+    numOfBed: String,
+    numOfBath: String,
     squareFeet: String,
-    pricing: [Number],
+    pricing: {
+      type: Array
+    },
   },
   location: {
     zip: Number,
@@ -251,11 +259,11 @@ const ListSchema = new Schema({
 
 const List = mongoose.model('List', ListSchema);
 const Feature = mongoose.model('Feature', FeatureSchema);
-const Addon = mongoose.model('Addons', FeatureSchema);
+const Addon = mongoose.model('Addon', AddonSchema);
 ListSchema.index({ address: 1, city: 1, zip: 1, province: 1 }); // schema level
 
 module.exports = {
   List,
   Feature,
-  Addons
+  Addon
 }

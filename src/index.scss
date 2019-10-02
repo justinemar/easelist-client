@@ -1,34 +1,33 @@
-
-*{
-  overflow:hidden;
+* {
+  overflow: hidden;
 }
 ::-webkit-scrollbar {
-  width: 0px;  /* Remove scrollbar space */
-  background: transparent;  /* Optional: just make scrollbar invisible */
+  width: 0px; /* Remove scrollbar space */
+  background: transparent; /* Optional: just make scrollbar invisible */
 }
 /* Optional: show position indicator in red */
 ::-webkit-scrollbar-thumb {
-  background: #FF0000;
+  background: #ff0000;
 }
 
-.loader-title{
-  width:100%;
-  height:30px;
-  margin-top:5px;
+.loader-title {
+  width: 100%;
+  height: 30px;
+  margin-top: 5px;
 }
 
-.loader-bar{
+.loader-bar {
   width: 200px;
-    height: 20px;
-    margin-top: 9px;
+  height: 20px;
+  margin-top: 9px;
 }
 
-.loader-card-hover{
+.loader-card-hover {
   box-shadow: inset -14px 0px 0px 0px #448fff;
   outline: #48484805 solid 10px;
 }
 
-.loader-card{
+.loader-card {
   background-color: #ffffff;
   border-radius: 2px;
   -webkit-box-shadow: 0px 1px 4px 8px rgba(251, 251, 251, 0.22);
@@ -43,88 +42,91 @@
   animation-name: placeHolderShimmer;
   animation-timing-function: linear;
   background: #f6f7f8;
-  background-image: -webkit-linear-gradient(left, #f6f7f8 0%, #edeef14d 20%, #f6f7f8 40%, #f6f7f8 100%);
+  background-image: -webkit-linear-gradient(
+    left,
+    #f6f7f8 0%,
+    #edeef14d 20%,
+    #f6f7f8 40%,
+    #f6f7f8 100%
+  );
 
   position: relative;
-  
 }
 
-@keyframes placeHolderShimmer{
-  0%{
-      background-position: -468px 0
+@keyframes placeHolderShimmer {
+  0% {
+    background-position: -468px 0;
   }
-  100%{
-      background-position: 468px 0
+  100% {
+    background-position: 468px 0;
   }
 }
 
-.panel-block{
+.panel-block {
   padding: 5px;
 }
-.panel-icon{
+.panel-icon {
   margin-right: 5px;
 }
-.properties{
+.properties {
   padding-right: 0;
   background: white;
   overflow: scroll;
   height: 100vh;
 }
-.panel{
+.panel {
   background: grey;
   display: flex;
   flex-direction: column;
 }
 
-.map-column{
+.map-column {
   padding: 0 !important;
 }
 
-.result-data{
-  color:#448FFF;
+.result-data {
+  color: #448fff;
 }
 
-.result-count{
+.result-count {
   padding-right: 5px;
   padding-top: 5px;
-
 }
 
-.selected-search{
+.selected-search {
   box-shadow: inset -14px 0px 0px 0px #448fff;
 }
 
-.filter-control{
+.filter-control {
   padding-left: 10px;
   padding-top: 10px;
-  color:#448FFF;
+  color: #448fff;
   font-weight: bold;
 }
 
-.result-header{
+.result-header {
   background: #f9f9f9;
   padding: 20px;
   border-radius: 12px;
 }
 
-.property-details-wrapper{
+.property-details-wrapper {
   padding: 16px;
   max-width: 100%;
   width: 100%;
 }
 
-.property-details-wrapper h1{
+.property-details-wrapper h1 {
   text-transform: uppercase;
 }
 
-.property-container{
+.property-container {
   display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: 100%;
-
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
 }
-.property-card{
+.property-card {
   display: flex;
   width: 100%;
   height: 180px;
@@ -134,12 +136,12 @@
   cursor: pointer;
 }
 
-.property-card:hover{
+.property-card:hover {
   box-shadow: inset -14px 0px 0px 0px #448fff;
   outline: #48484805 solid 10px;
 }
 
-.property-image-wrapper{
+.property-image-wrapper {
   width: 100%;
   height: 170px;
   margin-top: 20px;
@@ -147,24 +149,33 @@
   max-width: 250px;
 }
 
-.property-image{
+.property-image {
   width: 100%;
   height: 100%;
   background-size: contain;
   background-repeat: no-repeat;
 }
 
-.marker {
-  width: 50px;
-  height: 50px;
-  background:url('./house-icon.svg');
-  background-size:cover;
-  outline:none;
-  cursor: pointer;
-  border:none;
-}
+// .marker {
+//   width: 50px;
+//   height: 50px;
+//   background:url('./house-icon.svg');
+//   background-size:cover;
+//   outline:none;
+//   cursor: pointer;
+//   border:none;
+// }
 
-.card-footer .button{
+.marker {
+  width: 10px;
+  height: 10px;
+  outline: none;
+  cursor: pointer;
+  border: none;
+  border-radius: 100px;
+  background: #448fff;
+}
+.card-footer .button {
   margin-right: 3px;
 }
 .icon {
@@ -181,11 +192,12 @@
   margin-top: auto;
 }
 
-.search-place{
-  display: flex; justify-content: center;
+.search-place {
+  display: flex;
+  justify-content: center;
 }
 
-.search-container{
+.search-container {
   padding: 50px;
 }
 

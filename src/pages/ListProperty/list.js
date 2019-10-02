@@ -18,7 +18,8 @@ class ListProperty extends React.Component {
       center: [13.1162, 121.0794],
       transitionDuration: 5000,
       transitionInterpolator: new FlyToInterpolator(),
-      transitionEasing: easeCubic
+      transitionEasing: easeCubic,
+      maxZoom: 20
     },
     popUpProps: {
       lat: 14.5995,
@@ -118,6 +119,18 @@ class ListProperty extends React.Component {
         ...this.state.popUpProps,
         lng: parseFloat(e.target.value)
       }
+    });
+  };
+
+  submitListing = () => {
+    fetch("/api/property", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ ...this.state.properties })
+    }).then(res => {
+      alert("success");
     });
   };
 
@@ -1010,6 +1023,12 @@ class ListProperty extends React.Component {
                 </div>
               </div>
             </div>
+            <button
+              className="button is-extended is-info"
+              onClick={() => this.submitListing()}
+            >
+              CONFIRM AND LIST PROPERTY
+            </button>
           </div>
         </div>
         <div className="column">

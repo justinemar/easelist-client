@@ -12,18 +12,18 @@ function SuggestionBox({ data, searchTerm, redirectSearch }) {
       {data && data.length ? (
         <>
           <a className="panel-block" onClick={() => redirectSearch()}>
-            Suggested province {data[0].province}
+            Suggested province {data[0].location.province}
           </a>
           {data.map((source, i) => (
             <a
               className="panel-block"
               key={i}
-              onClick={() => redirectSearch(source, source.city)}
+              onClick={() => redirectSearch(source, source.location.city)}
             >
               <span className="panel-icon">
                 <i className="fa fa-map-marker"></i>
               </span>
-              {source.address.toUpperCase()}
+              {source.location.address.toUpperCase()}
             </a>
           ))}
         </>
@@ -63,7 +63,7 @@ class IndexComponent extends React.Component {
     const { history } = this.props;
     const { data } = this.state;
     history.push({
-      pathname: `/${data[0].province}/${searchParam}`,
+      pathname: `/${data[0].location.province}/${searchParam}`,
       selectedData
     });
   };

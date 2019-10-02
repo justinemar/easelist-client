@@ -26,7 +26,7 @@ const app = express();
 const PORT = 5000 | process.env.PORT;
 
 
-const { List, Feature } = require('./models/list');
+const { List, Feature, Addon } = require('./models/list');
 const Publisher = require('./models/publisher');
 const Account = require('./models/account');
 
@@ -59,62 +59,189 @@ app.post('/api/search', (req, res) => {
     if (query === '') {
         return res.json([])
     }
-    console.log(query)
-    List.aggregate([{
-        $match: {
-            $or: [
-                {
-                    zip: {
-                        $regex: query,
-                        '$options': 'i'
+    List.aggregate([
+        {
+            $lookup: {
+                from: "addons",
+                "localField": "_id",
+                "foreignField": "property",
+                as: "extras"
+            }
+        },
+        { "$unwind": "$extras" },
+        {
+            $match: {
+                $or: [
+                    {
+                        "extras.extra_loc": {
+                            $regex: query,
+                            $options: 'i'
+                        }
+                    },
+                    {
+                        "location.zip": {
+                            $regex: query,
+                            '$options': 'i'
+                        }
+                    },
+                    {
+                        "location.city": {
+                            $regex: query,
+                            '$options': 'i'
+                        }
+                    },
+                    {
+                        "location.province": {
+                            $regex: query,
+                            '$options': 'i'
+                        }
+                    },
+                    {
+                        "location.address": {
+                            $regex: query,
+                            '$options': 'i'
+                        }
                     }
-                },
-                {
-                    city: {
-                        $regex: query,
-                        '$options': 'i'
-                    }
-                },
-                {
-                    province: {
-                        $regex: query,
-                        '$options': 'i'
-                    }
-                },
-                {
-                    address: {
-                        $regex: query,
-                        '$options': 'i'
-                    }
-                }
-            ]
-        }
-    }, {
-        $project: {
-            province: 1,
-            title: 1,
-            description: 1,
-            startingPrice: 1,
-            address: 1,
-            city: 1,
-            feature: 1,
-            _id: 0
-        }
-    }], (err, data) => {
-        if (err) {
-            return res.json(err)
-        }
+                ]
+            }
+        },
+        {
+            $lookup: {
+                from: "features",
+                "localField": "_id",
+                "foreignField": "property",
+                as: "feature"
+            }
+        },
+        { "$unwind": "$feature" },
 
-        List.populate(data, { path: 'feature', select: 'geometry type' }, (err, populatedData) => {
+        {
+            $project: {
+                facts: 1,
+                location: 1,
+                feature: 1,
+                _id: 0
+            }
+        }
+    ]
+        , (err, data) => {
             if (err) {
                 return res.json(err)
             }
 
-            if (populatedData) {
-                res.json(populatedData)
+            if (data) {
+                res.json(data)
             }
-        })
-    })
+        });
+
+
+    // List.aggregate([{
+    //     $lookup: {
+    //         from: "addons",
+    //         localField: "location",
+    //         foreignField: "extra_loc",
+    //         as: "match_properties"
+    //     },
+    //     $match: {
+    //         location: {
+    //             $or: [
+    //                 {
+    //                     zip: {
+    //                         $regex: query,
+    //                         '$options': 'i'
+    //                     }
+    //                 },
+    //                 {
+    //                     city: {
+    //                         $regex: query,
+    //                         '$options': 'i'
+    //                     }
+    //                 },
+    //                 {
+    //                     province: {
+    //                         $regex: query,
+    //                         '$options': 'i'
+    //                     }
+    //                 },
+    //                 {
+    //                     address: {
+    //                         $regex: query,
+    //                         '$options': 'i'
+    //                     }
+    //                 }
+    //             ]
+    //         }
+    //     }
+    // }])
+
+    // Addon.aggregate(
+    //     { $match: {extra_loc: query}},
+    //     { $lookup: {from: 'users', localField: 'email', foreignField: 'email', as: 'user'} }
+    //   ).exec( function (err, invites) {
+    //     if (err) {
+    //       next(err);
+    //     }
+
+    //     res.json(invites);
+    //   }
+    // );
+
+    // console.log(query)
+    // List.aggregate([{
+    //     $match: {
+    //         $or: [
+    //             {
+    //                 zip: {
+    //                     $regex: query,
+    //                     '$options': 'i'
+    //                 }
+    //             },
+    //             {
+    //                 city: {
+    //                     $regex: query,
+    //                     '$options': 'i'
+    //                 }
+    //             },
+    //             {
+    //                 province: {
+    //                     $regex: query,
+    //                     '$options': 'i'
+    //                 }
+    //             },
+    //             {
+    //                 address: {
+    //                     $regex: query,
+    //                     '$options': 'i'
+    //                 }
+    //             }
+    //         ]
+    //     }
+    // }, {
+    //     $project: {
+    //         province: 1,
+    //         title: 1,
+    //         description: 1,
+    //         startingPrice: 1,
+    //         address: 1,
+    //         city: 1,
+    //         feature: 1,
+    //         _id: 0
+    //     }
+    // }], (err, data) => {
+    //     if (err) {
+    //         return res.json(err)
+    //     }
+
+    //     List.populate(data, { path: 'feature', select: 'geometry type' }, (err, populatedData) => {
+    //         if (err) {
+    //             return res.json(err)
+    //         }
+
+    //         if (populatedData) {
+    //             res.json(populatedData)
+    //         }
+    //     })
+    // })
 
 })
 
@@ -246,41 +373,91 @@ app.get('/api/list', (req, res) => {
 })
 
 app.post('/api/property', (req, res) => {
-    const extras = new Extras({
+    const { addons, dogs_policy, cats_policy, smoking_policy, pets_policy_detail,
+        num_of_dedicated_parking, num_of_covered_parking, num_of_garagae_parking, coords,
+        lease, num_of_bed, num_of_bath, square_feet, starting_price, deposit, zip_code,
+        city, province, street_address, publisher_id } = req.body;
 
-    })
     const newList = new List({
-        publisher: req.body.publisher_id,
-        title: req.body.title,
-        description: req.body.description,
-        pricing: [req.body.startingPrice, req.body.deposit],
-        zip: req.body.zip,
-        city: req.body.city,
-        province: req.body.province,
-        address: req.body.address,
+        publisher: publisher_id,
+        facts: {
+            title: req.body.title,
+            description: req.body.description,
+            numOfBed: num_of_bed,
+            numOfBath: num_of_bath,
+            squareFeet: square_feet,
+            pricing: [parseInt(starting_price), parseInt(deposit)],
+        },
+        location: {
+            zip: zip_code,
+            city: city,
+            province: province,
+            address: street_address
+        },
+        lease: {
+            terms: lease.terms,
+            detail: lease.detail
+        },
 
     })
 
     newList.save((err, list) => {
         if (err) {
-            res.json({ message: 'Error' })
+            console.log(err)
+            res.json({ message: 'from re', error: err })
         }
 
         if (list) {
+            const extras = new Addon({
+                property: list._id,
+                community_features: addons.community_features,
+                policy: {
+                    dogs: dogs_policy,
+                    cats: cats_policy,
+                    smoking: smoking_policy,
+                    detail: pets_policy_detail
+                },
+                amenities: {
+                    indoor: addons.amenities.indoor,
+                    outdoor: addons.amenities.outdoor
+                },
+                flooring: addons.flooring,
+                parking: {
+                    dedicated: num_of_dedicated_parking,
+                    covered: num_of_covered_parking,
+                    garage: num_of_garagae_parking
+                },
+                extra_loc: addons.extra_loc
+            })
+
             const newFeature = new Feature({
                 geometry: {
-                    coordinates: [120.973800, 14.599920]
+                    coordinates: [coords.lng, coords.lat]
                 },
                 property: list._id
             })
 
             newFeature.save((err, data) => {
                 if (err) {
-                    res.json({ message: 'Error' })
+                    console.log(err)
+
+                    res.json({ message: 'from here', error: err })
                 }
 
                 if (data) {
-                    return res.json(data)
+
+                    extras.save((err, extra) => {
+                        if (err) {
+                            console.log(err)
+
+                            res.json({ message: 'from here' })
+                        }
+
+                        if (extra) {
+                            return res.json(200)
+
+                        }
+                    })
                 }
             })
         }

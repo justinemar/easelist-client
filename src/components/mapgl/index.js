@@ -235,11 +235,11 @@ class MapGLRenderer extends React.Component {
                     <div className="property-popup-details">
                       <strong>
                         <p className="is-size-6">
-                          ₱{props.selectedProperty.startingPrice}
+                          ₱{props.selectedProperty.facts.pricing[0]}
                         </p>
                       </strong>
                       <p className="has-text-black">
-                        {props.selectedProperty.address}
+                        {props.selectedProperty.location.address}
                       </p>
                       <a href="#" class="has-text-primary">
                         Contact Property

@@ -172,12 +172,12 @@ function ResultCard({ refs, queryResult, showPopUp, selectedProperty }) {
             ></div>
           </div>
           <div class="property-details-wrapper has-text-black is-size-7">
-            <h1 class="is-size-6">{data.title}</h1>
+            <h1 class="is-size-6">{data.facts.title}</h1>
             <p class="is-size-5">
-              <strong>₱{data.startingPrice}</strong>
+              <strong>₱{data.facts.pricing[0]}</strong>
             </p>
             <p class="is-size-6" style={{ fontWeight: 500 }}>
-              {data.description}
+              {data.facts.description}
             </p>
             <div class="property-control">
               <a class="button is-primary">Contact</a>
