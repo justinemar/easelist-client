@@ -299,26 +299,23 @@ app.post('/api/account', async (req, res) => {
 })
 
 app.put('/api/account', async (req, res) => {
-    const { first_name, last_name, password, email, mobile_number, home_number } = req.body;
+    const { password, email } = req.body;
     const user = new Account({
-        first_name,
-        last_name,
         email,
         password,
-        mobile_number,
-        home_number
+
     });
 
     try {
         const userData = await user.save();
-        return res.json(userData)
+        return res.status(200).json(userData)
 
     } catch (err) {
         if (err.name === 'MongoError' && err.code === 11000) {
             return res.status(409).json({ errmsg: 'Account with the same email exists' })
         }
 
-        return res.status(501).json({ message: 'Unknown error occured us' })
+        return res.status(501).json({ errmsg: 'Unknown error occured' })
     }
 
 })

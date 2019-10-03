@@ -29,12 +29,7 @@ function SuggestionBox({ data, searchTerm, redirectSearch }) {
         </>
       ) : (
         <>
-          <a className="panel-block">
-            <span className="panel-icon">
-              <i className="fa fa-cross"></i>
-            </span>
-            Find your place now
-          </a>
+          <a className="panel-block">Find your place now</a>
         </>
       )}
     </>
@@ -125,7 +120,7 @@ class IndexComponent extends React.Component {
                     onKeyUp={this.onSearchValueChange}
                   />
                   <span className="icon is-medium is-left">
-                    <i className="fa fa-map-marker fa-lg"></i>
+                    <i className="fa fa-map-marker fa-sm"></i>
                   </span>
                   <div className="panel">
                     <SuggestionBox

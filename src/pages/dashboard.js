@@ -52,6 +52,7 @@ class DashBoard extends React.Component {
           </div>
           <div className="column">
             <Switch>
+              <Route path="/dashboard" render={() => <DashBoardContent />} />
               <Route path="/dashboard/leads" render={() => <Leads />} />
               <Route path="/dashboard/account" render={() => <Account />} />
             </Switch>
@@ -61,6 +62,10 @@ class DashBoard extends React.Component {
     );
   }
 }
+
+const DashBoardContent = props => {
+  return <h1>dashboard content</h1>;
+};
 
 const Leads = props => {
   return <h1>leads</h1>;

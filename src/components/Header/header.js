@@ -5,7 +5,7 @@ import { ModalContext } from "../accountForm";
 import { AuthServiceContext } from "../../utils/index";
 import logo from "./logo.png";
 
-function HeaderComponent() {
+function HeaderComponent(props) {
   const [modalShow, setModalShow] = useContext(ModalContext);
 
   const { isAuthenticated, _logOut } = useContext(AuthServiceContext);
@@ -32,9 +32,14 @@ function HeaderComponent() {
       <div className="navbar-menu">
         <div className="navbar-start">
           {isAuthenticated ? (
-            <a className="navbar-item" onClick={() => _logOut()}>
-              Log out
-            </a>
+            <>
+              <a className="navbar-item" onClick={() => _logOut()}>
+                Log out
+              </a>
+              <Link to="/dashboard" className="navbar-item">
+                Dashboard
+              </Link>
+            </>
           ) : (
             <a className="navbar-item" onClick={() => setModalShow(true)}>
               Sign in

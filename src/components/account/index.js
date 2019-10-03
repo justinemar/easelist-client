@@ -71,7 +71,7 @@ class Account extends React.Component {
                       <input
                         className="input is-light"
                         type="text"
-                        placeholder={first_name}
+                        placeholder={first_name || "First Name"}
                       />
                     </div>
                   </div>
@@ -80,7 +80,7 @@ class Account extends React.Component {
                       <input
                         className="input is-light"
                         type="text"
-                        placeholder={last_name}
+                        placeholder={last_name || "Last Name"}
                       />
                     </div>
                   </div>
@@ -102,7 +102,9 @@ class Account extends React.Component {
                         />
                       </p>
                     </div>
-                    <p class="help">Your phone number is not verified</p>
+                    <p class="help has-text-black">
+                      Your phone number is not verified
+                    </p>
                   </div>
                 </div>
               </div>
