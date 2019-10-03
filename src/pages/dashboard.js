@@ -52,7 +52,11 @@ class DashBoard extends React.Component {
           </div>
           <div className="column">
             <Switch>
-              <Route path="/dashboard" render={() => <DashBoardContent />} />
+              <Route
+                exact
+                path="/dashboard"
+                render={() => <DashBoardContent />}
+              />
               <Route path="/dashboard/leads" render={() => <Leads />} />
               <Route path="/dashboard/account" render={() => <Account />} />
             </Switch>
