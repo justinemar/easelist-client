@@ -1,8 +1,9 @@
-import React from "react";
-import Account from "../components/account/index";
+import React, { useEffect, useState, useContext } from "react";
+import Account from "../../components/account/index";
+import Properties from "./Properties";
 import { Route, Switch, NavLink } from "react-router-dom";
-import { AuthServiceContext } from "../utils/index";
-import "./index.scss";
+import { AuthServiceContext } from "../../utils/index";
+import "../index.scss";
 class DashBoard extends React.Component {
   static authContext = this.context;
 
@@ -58,6 +59,10 @@ class DashBoard extends React.Component {
                 render={() => <DashBoardContent />}
               />
               <Route path="/dashboard/leads" render={() => <Leads />} />
+              <Route
+                path="/dashboard/properties"
+                render={() => <Properties />}
+              />
               <Route path="/dashboard/account" render={() => <Account />} />
             </Switch>
           </div>

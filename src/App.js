@@ -12,7 +12,7 @@ import { ModalProvider } from "./components/accountForm/index";
 import IndexComponent from "./components/index";
 import SearchResult from "./pages/SearchResult/index";
 import HeaderComponent from "./components/Header/header";
-import DashBoard from "./pages/dashboard";
+import DashBoard from "./pages/Dashboard";
 import ListProperty from "./pages/ListProperty/list";
 import "./App.scss";
 // import 'bulma/css/bulma.css'

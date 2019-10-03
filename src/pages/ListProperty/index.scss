@@ -18,7 +18,18 @@
   text-align: left;
   padding: 5px;
 }
+.image-preview {
+  width: 100%;
+  height: 250px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  background-position: center;
+}
 
+.image-preview:hover {
+  border: 5px solid #dc8383;
+}
 .listing-popup-details {
   font-weight: 600;
   font-size: 0.75rem !important;

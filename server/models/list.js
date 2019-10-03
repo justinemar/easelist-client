@@ -217,7 +217,12 @@ const AddonSchema = new Schema({
     type: Array
   }
 })
+
 const ListSchema = new Schema({
+  status: {
+    type: String,
+    default: 'Pending'
+  },
   publisher: {
     type: Schema.Types.ObjectId,
     ref: 'Publisher'

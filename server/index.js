@@ -33,26 +33,7 @@ const Account = require('./models/account');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.static(path.resolve(__dirname, '../public')));
-// app.use((req, res, next) => {
-//     console.log('token middleware');
-//     const token = req.headers.authorization.slice(7 - req.headers.authorization.length);
 
-//     isValid = JSRSASign.KJUR.jws.JWS.verifyJWT(token, "$PraveenIsNotAwesome!", {alg: ["HS512"], gracePeriod: 1 * 60 * 60});
-//     res.send(isValid)
-//     jwt.verify(token, process.env.KEY1, (err, decoded) => {
-//         if (err) {
-//             res.status(401).json({
-//                 message: 'Your session has expired, please login to continue where you left off',
-//                 type: 'error',
-//                 code: 401,
-//             });
-//         }
-
-//         if (decoded) {
-//             next();
-//         }
-//     });
-// });
 
 app.post('/api/search', (req, res) => {
     const { query } = req.query;
@@ -298,6 +279,42 @@ app.post('/api/account', async (req, res) => {
     }
 })
 
+app.use((req, res, next) => {
+    const { authorization } = req.headers;
+
+    if (authorization) {
+        const token = req.headers.authorization.slice(7 - req.headers.authorization.length);
+        isValid = JSRSASign.KJUR.jws.JWS.verifyJWT(token, "$PraveenIsNotAwesome!", { alg: ["HS512"], gracePeriod: 1 * 60 * 60 });
+
+        if (isValid) {
+            var payloadObj = JSRSASign.KJUR.jws.JWS.readSafeJSONString(JSRSASign.b64toutf8(token.split(".")[1]));
+            res.locals.verifiedToken = payloadObj;
+            next()
+        } else {
+            res.status(401).json({
+                message: 'Somethings not right..',
+                code: 401
+            });
+        }
+    } else {
+        res.status(401).json({
+            message: 'Your session may have been expired',
+            code: 401
+        });
+    }
+
+
+
+
+
+});
+
+app.put('/api/account/:id', async (req, res) => {
+    const { first_name, last_name, password, phone } = this.req;
+
+    Account.findOneAndUpdate({ _id: req.query.id })
+})
+
 app.put('/api/account', async (req, res) => {
     const { password, email } = req.body;
     const user = new Account({
@@ -369,14 +386,29 @@ app.get('/api/list', (req, res) => {
     res.json({})
 })
 
+
+app.get('/api/properties', (req, res) => {
+    const id = res.locals.verifiedToken.id;
+    List.find({ publisher: id })
+        .populate('feature').
+        exec(function (err, properties) {
+            if (err) return res.json({ message: 'Error' });
+
+            if (properties) {
+                return res.json({ properties: properties });
+            }
+        });
+})
+
 app.post('/api/property', (req, res) => {
     const { addons, dogs_policy, cats_policy, smoking_policy, pets_policy_detail,
         num_of_dedicated_parking, num_of_covered_parking, num_of_garagae_parking, coords,
         lease, num_of_bed, num_of_bath, square_feet, starting_price, deposit, zip_code,
-        city, province, street_address, publisher_id } = req.body;
-
+        city, province, street_address } = req.body;
+    const id = res.locals.verifiedToken.id;
+    console.log(req.body)
     const newList = new List({
-        publisher: publisher_id,
+        publisher: id,
         facts: {
             title: req.body.title,
             description: req.body.description,
@@ -451,7 +483,10 @@ app.post('/api/property', (req, res) => {
                         }
 
                         if (extra) {
-                            return res.json(200)
+                            return res.status(200).json({
+                                message: 'Property is now awaiting verification',
+
+                            })
 
                         }
                     })

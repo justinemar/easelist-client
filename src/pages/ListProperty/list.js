@@ -1,4 +1,5 @@
 import React from "react";
+import { AuthServiceContext } from "../../utils/index";
 import ReactMapGL, {
   Marker,
   LinearInterpolator,
@@ -8,50 +9,93 @@ import ReactMapGL, {
 import { easeCubic } from "d3-ease";
 import "./index.scss";
 class ListProperty extends React.Component {
-  state = {
-    viewport: {
-      latitude: 13.1162,
-      longitude: 121.0794,
-      width: "100%",
-      height: "100vh" /*100% */,
-      zoom: 5,
-      center: [13.1162, 121.0794],
-      transitionDuration: 5000,
-      transitionInterpolator: new FlyToInterpolator(),
-      transitionEasing: easeCubic,
-      maxZoom: 20
-    },
-    popUpProps: {
-      lat: 14.5995,
-      lng: 120.9842
-    },
-    mounted: false,
-    token:
-      "pk.eyJ1IjoiYmVyYmVyb2thIiwiYSI6ImNrMG90cnpzNTA5YzUzbmtyMjFlano1ZDYifQ.pBd7NWQF3lCnVQWH8xeliQ",
-    properties: {
-      first_name: "John",
-      last_name: "Doe",
-      telephone: "",
-      email_address: "",
-      lease: {
-        terms: [],
-        detail: ""
+  constructor(props) {
+    super(props);
+    this.imageUpload = React.createRef();
+    this.state = {
+      viewport: {
+        latitude: 13.1162,
+        longitude: 121.0794,
+        width: "100%",
+        height: "100vh" /*100% */,
+        zoom: 5,
+        center: [13.1162, 121.0794],
+        transitionDuration: 5000,
+        transitionInterpolator: new FlyToInterpolator(),
+        transitionEasing: easeCubic,
+        maxZoom: 20
       },
-      addons: {
-        amenities: {
-          indoor: [],
-          outdoor: []
+      popUpProps: {
+        lat: 14.5995,
+        lng: 120.9842
+      },
+      mounted: false,
+      token:
+        "pk.eyJ1IjoiYmVyYmVyb2thIiwiYSI6ImNrMG90cnpzNTA5YzUzbmtyMjFlano1ZDYifQ.pBd7NWQF3lCnVQWH8xeliQ",
+      properties: {
+        first_name: "John",
+        last_name: "Doe",
+        telephone: "",
+        email_address: "",
+        lease: {
+          terms: [],
+          detail: ""
         },
-        flooring: [],
-        community_features: [],
-        extra_loc: []
+        addons: {
+          amenities: {
+            indoor: [],
+            outdoor: []
+          },
+          flooring: [],
+          community_features: [],
+          extra_loc: []
+        },
+        coords: {
+          lat: "",
+          lng: ""
+        },
+        ImagesData: []
       },
-      coords: {
-        lat: "",
-        lng: ""
+      previewImages: [],
+      mock: {
+        first_name: "Justine Mhar",
+        last_name: "Cantado",
+        telephone: "639366918349",
+        email_address: "jmarcantado@gmail.com",
+        lease: { terms: ["1 Year"], detail: "download pdf" },
+        addons: {
+          amenities: { indoor: ["clasffied"], outdoor: ["clasffied"] },
+          flooring: ["clasffied"],
+          community_features: ["clasffied"],
+          extra_loc: ["clasffied"]
+        },
+        coords: { lat: 14.19574, lng: 121.16624 },
+        street_address: "clasffied",
+        city: "clasffied",
+        province: "clasffied",
+        zip_code: "4027",
+        extra_loc: "clasffied",
+        starting_price: "2411",
+        deposit: "12421",
+        num_of_bed: "2",
+        num_of_bath: "3",
+        square_feet: "2212",
+        title: "124141",
+        description: "DQWD",
+        community_features: "ADA",
+        dogs_policy: "Call for Info",
+        cats_policy: "Not Allowed",
+        smoking_policy: "Outside Only",
+        pets_policy_detail: "ADAWD",
+        indoor: "AD",
+        outdoor: "DA",
+        flooring: "DA",
+        num_of_dedicated_parking: "2",
+        num_of_covered_parking: "3",
+        num_of_garage_parking: "2"
       }
-    }
-  };
+    };
+  }
 
   componentDidMount() {
     this.setState({
@@ -123,20 +167,30 @@ class ListProperty extends React.Component {
   };
 
   submitListing = () => {
+    const { fetch, _getToken } = this.context;
+    const { properties } = this.state;
+
+    if (properties.coords.lat === "" || properties.coords.lng === "") {
+      alert("Confirm your coordinates!");
+      return;
+    }
+
+    if (!_getToken()) {
+      alert("You must login to do this..");
+      return;
+    }
+
     fetch("/api/property", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ ...this.state.properties })
+      body: JSON.stringify({ ...this.state.mock })
     }).then(res => {
-      alert("success");
+      alert("success now awaiting verification.");
     });
   };
 
   trackAddons = e => {
     const { properties } = this.state;
-    const { name: key, value, type } = e.target;
+    const { name: key } = e.target;
     console.log(key);
     if (key === "indoor" || key === "outdoor") {
       this.setState({
@@ -224,8 +278,56 @@ class ListProperty extends React.Component {
     });
   };
 
+  addImageData = () => {
+    const fileList = Array.from(this.imageUpload.current.files);
+    this.setState(prevState => ({
+      properties: {
+        ...prevState.properties,
+        ImagesData: [...prevState.properties.ImagesData, ...fileList]
+      }
+    }));
+  };
+
+  removeImageData = index => {
+    const { properties } = this.state;
+    const data = [...properties.ImagesData];
+    data.splice(index, 1);
+    this.setState(prevState => ({
+      properties: {
+        ...prevState.properties,
+        ImagesData: data
+      }
+    }));
+  };
+
+  previewFile = e => {
+    const images = [];
+    for (let i = 0; i < e.currentTarget.files.length; i++) {
+      const file = e.currentTarget.files[i];
+      const image = URL.createObjectURL(file);
+      images.push(image);
+    }
+    this.setState(
+      prevState => ({
+        previewImages: [...prevState.previewImages, ...images]
+      }),
+      // eslint-disable-next-line comma-dangle
+      this.addImageData()
+    );
+  };
+
+  removePreview = index => {
+    const { previewImages } = this.state;
+    const copyImage = [...previewImages];
+    this.removeImageData(index);
+    copyImage.splice(index, 1);
+    this.setState({
+      previewImages: copyImage
+    });
+  };
+
   render() {
-    const { viewport, token, properties } = this.state;
+    const { viewport, token, properties, previewImages } = this.state;
     return (
       <div className="columns is-gapless">
         <div className="column is-two-third panel-wrapper">
@@ -316,6 +418,7 @@ class ListProperty extends React.Component {
                         onChange={this.handleInputChange}
                         value={properties.property_type}
                       >
+                        <option></option>
                         <option>Apartment</option>
                         <option>Commercial</option>
                         <option>Condo</option>
@@ -492,6 +595,7 @@ class ListProperty extends React.Component {
                         name="num_of_bed"
                         onChange={this.handleInputChange}
                       >
+                        <option></option>
                         <option>Studio</option>
                         <option>1</option>
                         <option>2</option>
@@ -514,6 +618,7 @@ class ListProperty extends React.Component {
                         name="num_of_bath"
                         onChange={this.handleInputChange}
                       >
+                        <option></option>
                         <option>1</option>
                         <option>2</option>
                         <option>3</option>
@@ -739,6 +844,7 @@ class ListProperty extends React.Component {
                         name="dogs_policy"
                         onChange={this.handleInputChange}
                       >
+                        <option></option>
                         <option>Allowed</option>
                         <option>Not Allowed</option>
                         <option>Call for Info</option>
@@ -758,6 +864,7 @@ class ListProperty extends React.Component {
                         name="cats_policy"
                         onChange={this.handleInputChange}
                       >
+                        <option></option>
                         <option>Allowed</option>
                         <option>Not Allowed</option>
                         <option>Call for Info</option>
@@ -777,6 +884,7 @@ class ListProperty extends React.Component {
                         name="smoking_policy"
                         onChange={this.handleInputChange}
                       >
+                        <option></option>
                         <option>Allowed</option>
                         <option>Not Allowed</option>
                         <option>Outside Only</option>
@@ -931,6 +1039,7 @@ class ListProperty extends React.Component {
                         name="num_of_dedicated_parking"
                         onChange={this.handleInputChange}
                       >
+                        <option></option>
                         <option>None</option>
                         <option>1</option>
                         <option>2</option>
@@ -952,6 +1061,7 @@ class ListProperty extends React.Component {
                         name="num_of_covered_parking"
                         onChange={this.handleInputChange}
                       >
+                        <option></option>
                         <option>None</option>
                         <option>1</option>
                         <option>2</option>
@@ -973,6 +1083,7 @@ class ListProperty extends React.Component {
                         name="num_of_garage_parking"
                         onChange={this.handleInputChange}
                       >
+                        <option></option>
                         <option>None</option>
                         <option>1</option>
                         <option>2</option>
@@ -988,16 +1099,56 @@ class ListProperty extends React.Component {
                 </div>
               </div>
             </div>
+            <h1 className="panel-heading is-size-3 has-text-black">
+              Gallery (max 4)
+            </h1>
+            <div class="field is-centered">
+              <div className="field">
+                <div class="file is-centered is-boxed is-success has-name">
+                  <label class="file-label">
+                    <input
+                      name="image"
+                      onClick={event => {
+                        event.target.value = null;
+                      }}
+                      accept="image/*"
+                      ref={this.imageUpload}
+                      onChange={this.previewFile}
+                      className="file-input"
+                      type="file"
+                      multiple
+                    />
+                    <span class="file-cta">
+                      <span class="file-icon">
+                        <i class="fas fa-upload"></i>
+                      </span>
+                      <span class="file-label">Upload Images</span>
+                    </span>
+                  </label>
+                </div>
+              </div>
+              <div className="field">
+                <div className="columns is-multiline">
+                  <FilePreview
+                    previewImages={previewImages}
+                    removePreview={this.removePreview}
+                  />
+                </div>
+              </div>
+            </div>
+            <h1 className="panel-heading is-size-3 has-text-black">
+              Map display
+            </h1>
             <div className="field is-horizontal">
               <div className="listing-popup-container">
                 <div className="listing-popup-details">
                   <strong>
                     <p className="is-size-6">
-                      Locate your property on the map by dragging the blue house
-                      icon or by providing the coordinates below (use the mouse
-                      wheel to zoom-in and zoom-out) Note: You can offset your
-                      coordinates if you dont want potential clients to know the
-                      exact location.
+                      Locate your property on the map by dragging the blue
+                      pointer icon or by providing the coordinates below (use
+                      the mouse wheel to zoom-in and zoom-out) Note: You can
+                      offset your coordinates if you dont want potential clients
+                      to know the exact location.
                     </p>
                     <input
                       onChange={e => this.handleLatChange(e)}
@@ -1017,7 +1168,7 @@ class ListProperty extends React.Component {
                       className="button is-info"
                       onClick={() => this.confirmCoords()}
                     >
-                      Fly to coordinate
+                      Confirm Coordinates
                     </a>
                   </strong>
                 </div>
@@ -1027,7 +1178,7 @@ class ListProperty extends React.Component {
               className="button is-extended is-info"
               onClick={() => this.submitListing()}
             >
-              CONFIRM AND LIST PROPERTY
+              PROCEED
             </button>
           </div>
         </div>
@@ -1054,4 +1205,25 @@ class ListProperty extends React.Component {
   }
 }
 
+ListProperty.contextType = AuthServiceContext;
 export default ListProperty;
+const FilePreview = ({ previewImages, removePreview }) => {
+  if (previewImages.length > 0) {
+    const renderImage = previewImages.map((i, index) => (
+      <div
+        className="column is-two-third is-half-tablet"
+        onClick={() => removePreview(index)}
+        key={index}
+      >
+        <div
+          className="image-preview"
+          style={{ backgroundImage: `url(${i})` }}
+        />
+      </div>
+    ));
+
+    return renderImage;
+  }
+
+  return null;
+};

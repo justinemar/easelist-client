@@ -13,10 +13,7 @@ export class AuthService extends React.Component {
   componentDidMount() {
     const { history } = this.props;
     if (!this._validSession()) {
-      this.setState({
-        loginPopUp: true,
-        isAuthenticated: false
-      });
+      this._logOut();
     } else {
       try {
         const userData = this._getUserData();
@@ -103,6 +100,24 @@ export class AuthService extends React.Component {
     });
   };
 
+  fetch = (url, options) => {
+    // performs api calls sending the required authentication header
+
+    const headers = {
+      "Content-Type": "application/json"
+    };
+
+    // Setting Authorization header
+    // Authorization: Bearer xxxxxxx.xxxxxxxx.xxxxxx
+
+    headers.Authorization = `Bearer ${this._getToken()}`;
+
+    return fetch(url, {
+      headers,
+      ...options
+    }).then(response => response.json());
+  };
+
   state = {
     userData: [],
     isAuthenticated: false,
@@ -110,7 +125,9 @@ export class AuthService extends React.Component {
     _setToken: this._setToken,
     loginPopUp: false,
     _logOut: this._logOut,
-    _validSession: this._validSession
+    _validSession: this._validSession,
+    fetch: this.fetch,
+    _getToken: this._getToken
   };
 
   render() {
