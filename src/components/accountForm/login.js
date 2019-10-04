@@ -4,8 +4,8 @@ import { AuthServiceContext } from "../../utils/index";
 
 class Login extends React.Component {
   state = {
-    email: "easelist@mail.com",
-    password: "",
+    email: "jmarcantado@gmail.com",
+    password: "newone131521",
     responseProps: {
       status: "",
       message: ""

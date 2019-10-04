@@ -118,6 +118,12 @@ export class AuthService extends React.Component {
     }).then(response => response.json());
   };
 
+  setModalShow = () => {
+    this.setState({
+      loginPopUp: this.state.loginPopUp ? false : true
+    });
+  };
+
   state = {
     userData: [],
     isAuthenticated: false,
@@ -127,7 +133,8 @@ export class AuthService extends React.Component {
     _logOut: this._logOut,
     _validSession: this._validSession,
     fetch: this.fetch,
-    _getToken: this._getToken
+    _getToken: this._getToken,
+    setModalShow: this.setModalShow
   };
 
   render() {

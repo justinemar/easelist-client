@@ -6,9 +6,9 @@ import { AuthServiceContext } from "../../utils/index";
 import logo from "./logo.png";
 
 function HeaderComponent(props) {
-  const [modalShow, setModalShow] = useContext(ModalContext);
-
-  const { isAuthenticated, _logOut } = useContext(AuthServiceContext);
+  const { isAuthenticated, _logOut, setModalShow } = useContext(
+    AuthServiceContext
+  );
   return (
     <nav className="navbar" role="navigation" aria-label="main navigation">
       <div className="navbar-brand">

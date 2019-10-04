@@ -42,9 +42,8 @@ function App() {
     <div className="App">
       <Router>
         <AuthServiceWithRouter>
-          <ModalProvider>
-            <HeaderComponent />
-          </ModalProvider>
+          <HeaderComponent />
+          <ModalProvider />
           <Switch>
             <Route
               exact

@@ -49,7 +49,7 @@ app.post('/api/search', (req, res) => {
                 as: "extras"
             }
         },
-        { "$unwind": "$extras" },
+
         {
             $match: {
                 $or: [
@@ -95,12 +95,13 @@ app.post('/api/search', (req, res) => {
             }
         },
         { "$unwind": "$feature" },
-
+        { "$unwind": "$extras" },
         {
             $project: {
                 facts: 1,
                 location: 1,
                 feature: 1,
+                amenites: 1,
                 _id: 0
             }
         }
