@@ -25,6 +25,29 @@ function Province() {
   );
 }
 
+function Footer({ children }) {
+  return (
+    <footer className="footer">
+      <div className="content has-text-centered has-text-black">
+        <p>
+          <strong>Currently being Develop</strong> by{" "}
+          <a className="has-text-black" href="https://justinemar.surge.sh">
+            Justine Cantado
+          </a>
+          . The source code is licensed
+          <a
+            className="has-text-black"
+            href="http://opensource.org/licenses/mit-license.php"
+          >
+            {" "}
+            MIT
+          </a>
+        </p>
+      </div>
+    </footer>
+  );
+}
+
 const ProtectedRoute = ({ component: Component, ...rest }) => {
   const { _validSession } = useContext(AuthServiceContext);
   return (
@@ -62,6 +85,7 @@ function App() {
             />
           </Switch>
         </AuthServiceWithRouter>
+        <Footer />
       </Router>
     </div>
   );

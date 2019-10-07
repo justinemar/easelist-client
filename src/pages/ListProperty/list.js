@@ -33,8 +33,8 @@ class ListProperty extends React.Component {
       token:
         "pk.eyJ1IjoiYmVyYmVyb2thIiwiYSI6ImNrMG90cnpzNTA5YzUzbmtyMjFlano1ZDYifQ.pBd7NWQF3lCnVQWH8xeliQ",
       properties: {
-        first_name: "John",
-        last_name: "Doe",
+        first_name: "",
+        last_name: "",
         telephone: "",
         email_address: "",
         lease: {
@@ -169,6 +169,22 @@ class ListProperty extends React.Component {
   submitListing = () => {
     const { fetch, _getToken } = this.context;
     const { properties } = this.state;
+
+    if (properties.first_name === "" || properties.last_name === "") {
+      return alert("Required missing inputs");
+    }
+
+    if (properties.title === "" || properties.description === "") {
+      return alert("Required missing inputs");
+    }
+
+    if (properties.starting_price === "" || properties.city === "") {
+      return alert("Required missing inputs");
+    }
+
+    if (properties.province === "" || properties.zip_code === "") {
+      return alert("Required missing inputs");
+    }
 
     if (properties.coords.lat === "" || properties.coords.lng === "") {
       alert("Confirm your coordinates!");
