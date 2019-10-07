@@ -2,6 +2,10 @@
   "name": "rent",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "10.16.3",
+    "npm": "6.x"
+  },
   "dependencies": {
     "bcrypt": "^3.0.6",
     "bloomer": "^0.6.5",
@@ -35,7 +39,8 @@
     "react-text-loop": "^2.1.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "node ./server/index.js",
+    "dev": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -43,17 +48,17 @@
   "eslintConfig": {
     "extends": "react-app"
   },
- "lint-staged": {
-     "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
-       "prettier --write",
-       "git add"
-     ]
-   },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
+      "prettier --write",
+      "git add"
+    ]
+  },
   "husky": {
-      "hooks": {
-        "pre-commit": "lint-staged"
-      }
-    },
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
   "proxy": "http://localhost:5000",
   "browserslist": {
     "production": [
