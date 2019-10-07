@@ -42,7 +42,8 @@ class IndexComponent extends React.Component {
       searchValue: null,
       data: [],
       showSuggestions: false,
-      noRes: false
+      noRes: false,
+      loading: false
     };
   }
 
@@ -63,12 +64,14 @@ class IndexComponent extends React.Component {
 
   onSearchValueChange = e => {
     this.setState({
-      searchValue: e.target.value
+      searchValue: e.target.value,
+      loading: true
     });
     if (e.target.value.length <= 2 && e.key === "Backspace") {
       this.setState({
         data: [],
-        noRes: false
+        noRes: false,
+        loading: false
       });
       return;
     }
@@ -87,17 +90,18 @@ class IndexComponent extends React.Component {
         if (!res.length) {
           console.log("ey");
           this.setState({
-            noRes: true
+            noRes: true,
+            loading: false
           });
           return;
         }
 
-        this.setState({ data: [...res] });
+        this.setState({ data: [...res], loading: false });
       });
   };
 
   render() {
-    const { data, searchValue, showSuggestions, noRes } = this.state;
+    const { data, searchValue, showSuggestions, noRes, loading } = this.state;
     return (
       <React.Fragment>
         <section className="section">
@@ -157,7 +161,13 @@ class IndexComponent extends React.Component {
                     className="button is-info is-large"
                     onClick={() => this.onSearchSubmit()}
                   >
-                    Search
+                    {loading ? (
+                      <span className="icon">
+                        <i class="fas fa-spinner fa-pulse"></i>
+                      </span>
+                    ) : (
+                      <p>Search</p>
+                    )}
                   </button>
                 </div>
               </div>
