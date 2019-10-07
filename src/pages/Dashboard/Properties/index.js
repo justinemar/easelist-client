@@ -6,7 +6,7 @@ const Properties = props => {
   const authContext = useContext(AuthServiceContext);
   const { fetch } = authContext;
   useEffect(() => {
-    fetch("/api/properties", {
+    fetch("https://backend-easelist.herokuapp.com/api/properties", {
       method: "GET"
     }).then(res => {
       updateProperties(res.properties);

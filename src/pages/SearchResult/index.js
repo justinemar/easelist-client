@@ -140,11 +140,9 @@ function ResultCard({ refs, queryResult, showPopUp, selectedProperty }) {
 
   return queryResult && queryResult.features.length ? (
     queryResult.features.map((data, key) => {
-      if (data && selectedProperty.feature) {
+      if (data && selectedProperty) {
         isHighlighted =
-          data.feature._id === selectedProperty.feature._id
-            ? "selected-search"
-            : "";
+          data._id === selectedProperty._id ? "selected-search" : "";
       }
 
       const handleMouseOver = () => {
@@ -156,8 +154,8 @@ function ResultCard({ refs, queryResult, showPopUp, selectedProperty }) {
       };
       return (
         <div
-          ref={refs[data.feature._id]}
-          key={data.feature._id}
+          ref={refs[data._id]}
+          key={data._id}
           class={`property-card ${isHighlighted}`}
           onMouseOver={handleMouseOver}
           onMouseOut={handleMouseOut}
@@ -172,12 +170,12 @@ function ResultCard({ refs, queryResult, showPopUp, selectedProperty }) {
             ></div>
           </div>
           <div class="property-details-wrapper has-text-black is-size-7">
-            <h1 class="is-size-6">{data.facts.title}</h1>
+            <h1 class="is-size-6">{data.lists.facts.title}</h1>
             <p class="is-size-5">
-              <strong>₱{data.facts.pricing[0]}</strong>
+              <strong>₱{data.lists.facts.pricing[0]}</strong>
             </p>
             <p class="is-size-6" style={{ fontWeight: 500 }}>
-              {data.facts.description}
+              {data.lists.facts.description}
             </p>
             <div class="property-control">
               <a class="button is-primary">Contact</a>

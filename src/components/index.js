@@ -4,7 +4,7 @@ import MakatiCard from "../makati.jpg";
 import MandaluyongCard from "../mandaluyong.jpg";
 import QuezonCityCard from "../quezoncity.jpg";
 import TextLoop from "react-text-loop";
-import { Link } from "react-dom";
+import { Link } from "react-router-dom";
 
 function SuggestionBox({ data, searchTerm, redirectSearch }) {
   return (
@@ -41,14 +41,12 @@ class IndexComponent extends React.Component {
     this.state = {
       searchValue: null,
       data: [],
-      showSuggestions: false
+      showSuggestions: false,
+      noRes: false
     };
   }
 
-  onSearchSubmit = e => {
-    // console.log(`/places?query=${this.state.searchValue}`)
-    // this.props.history.push(`/places?query=${this.state.searchValue}`);
-  };
+  onSearchSubmit = e => {};
 
   componentDidMount() {
     console.log(this.state.data);
@@ -69,22 +67,37 @@ class IndexComponent extends React.Component {
     });
     if (e.target.value.length <= 2 && e.key === "Backspace") {
       this.setState({
-        data: []
+        data: [],
+        noRes: false
       });
       return;
     }
 
     if (e.target.value.length <= 2) return;
 
-    fetch(`/api/search?query=${e.target.value}`, {
-      method: "POST"
-    }).then(res => {
-      res.json().then(parsed => this.setState({ data: [...parsed] }));
-    });
+    fetch(
+      `https://backend-easelist.herokuapp.com/api/search/partial?query=${e.target.value}`,
+      {
+        method: "POST"
+      }
+    )
+      .then(res => res.json())
+      .then(res => {
+        console.log(!res.length);
+        if (!res.length) {
+          console.log("ey");
+          this.setState({
+            noRes: true
+          });
+          return;
+        }
+
+        this.setState({ data: [...res] });
+      });
   };
 
   render() {
-    const { data, searchValue, showSuggestions } = this.state;
+    const { data, searchValue, showSuggestions, noRes } = this.state;
     return (
       <React.Fragment>
         <section className="section">
@@ -123,11 +136,20 @@ class IndexComponent extends React.Component {
                     <i className="fa fa-map-marker fa-sm"></i>
                   </span>
                   <div className="panel">
-                    <SuggestionBox
-                      data={data}
-                      searchTerm={searchValue}
-                      redirectSearch={this.redirectSearch}
-                    />
+                    {noRes ? (
+                      <>
+                        <a className="panel-block">
+                          No listing under {searchValue}{" "}
+                          <Link to="/list">LIST IT NOW</Link>
+                        </a>
+                      </>
+                    ) : (
+                      <SuggestionBox
+                        data={data}
+                        searchTerm={searchValue}
+                        redirectSearch={this.redirectSearch}
+                      />
+                    )}
                   </div>
                 </div>
                 <div className="control">

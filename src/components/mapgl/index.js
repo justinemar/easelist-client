@@ -198,28 +198,24 @@ class MapGLRenderer extends React.Component {
               {toMark && toMark.features.length
                 ? toMark.features.map(prop => (
                     <Marker
-                      latitude={prop.feature.geometry.coordinates[1]}
-                      longitude={prop.feature.geometry.coordinates[0]}
+                      latitude={prop.geometry.coordinates[1]}
+                      longitude={prop.geometry.coordinates[0]}
                     >
                       <button
                         className="marker"
                         onClick={e => {
                           e.preventDefault();
                           props.setSelectedProperty(prop);
-                          props.setScrollToView(prop.feature._id);
+                          props.setScrollToView(prop._id);
                         }}
                       ></button>
                     </Marker>
                   ))
                 : null}
-              {props.selectedProperty && props.selectedProperty.feature ? (
+              {props.selectedProperty && props.selectedProperty.geometry ? (
                 <Popup
-                  latitude={
-                    props.selectedProperty.feature.geometry.coordinates[1]
-                  }
-                  longitude={
-                    props.selectedProperty.feature.geometry.coordinates[0]
-                  }
+                  latitude={props.selectedProperty.geometry.coordinates[1]}
+                  longitude={props.selectedProperty.geometry.coordinates[0]}
                   onClose={() => {
                     props.setSelectedProperty([]);
                   }}
@@ -235,11 +231,11 @@ class MapGLRenderer extends React.Component {
                     <div className="property-popup-details">
                       <strong>
                         <p className="is-size-6">
-                          ₱{props.selectedProperty.facts.pricing[0]}
+                          ₱{props.selectedProperty.lists.facts.pricing[0]}
                         </p>
                       </strong>
                       <p className="has-text-black">
-                        {props.selectedProperty.location.address}
+                        {props.selectedProperty.lists.location.address}
                       </p>
                       <a href="#" class="has-text-primary">
                         Contact Property

@@ -54,7 +54,7 @@ class Register extends React.Component {
       return;
     }
 
-    fetch("/api/account", {
+    fetch("https://backend-easelist.herokuapp.com/api/account", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json"

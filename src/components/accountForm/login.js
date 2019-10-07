@@ -4,8 +4,8 @@ import { AuthServiceContext } from "../../utils/index";
 
 class Login extends React.Component {
   state = {
-    email: "jmarcantado@gmail.com",
-    password: "newone131521",
+    email: "",
+    password: "",
     responseProps: {
       status: "",
       message: ""
@@ -31,6 +31,18 @@ class Login extends React.Component {
     const { _defaultLogin, _setToken } = this.context;
     const { email, password } = this.state;
     const { history } = this.props;
+
+    if (email === "" || password === "") {
+      this.setState({
+        responseProps: {
+          status: "has-text-danger",
+          message: "dude.. lets not waste bandwith, fill up the form!"
+        }
+      });
+
+      return;
+    }
+
     const data = await _defaultLogin(email, password).catch(exception => {
       exception.json().then(error => {
         this.setState({

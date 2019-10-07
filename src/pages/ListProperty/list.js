@@ -180,9 +180,9 @@ class ListProperty extends React.Component {
       return;
     }
 
-    fetch("/api/property", {
+    fetch("https://backend-easelist.herokuapp.com/api/property", {
       method: "POST",
-      body: JSON.stringify({ ...this.state.mock })
+      body: JSON.stringify({ ...properties })
     }).then(res => {
       alert("success now awaiting verification.");
     });
