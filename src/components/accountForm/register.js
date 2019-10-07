@@ -1,7 +1,7 @@
 import React from "react";
 import { AuthServiceContext } from "../../utils/index";
 import Validation from "../../utils/validation";
-
+import Loader from "../Loader";
 class Register extends React.Component {
   constructor() {
     super();
@@ -16,6 +16,10 @@ class Register extends React.Component {
       formProps: {
         field: "",
         toValidate: ""
+      },
+      loading: {
+        text: "Confirm",
+        isLoading: false
       }
     };
   }
@@ -54,6 +58,13 @@ class Register extends React.Component {
       return;
     }
 
+    this.setState({
+      loading: {
+        text: "Confirm",
+        isLoading: true
+      }
+    });
+
     fetch("https://backend-easelist.herokuapp.com/api/account", {
       method: "PUT",
       headers: {
@@ -69,6 +80,10 @@ class Register extends React.Component {
           responseProps: {
             status: "has-text-success",
             message: "Logging you in.."
+          },
+          loading: {
+            text: "Confirm",
+            isLoading: true
           }
         });
         const data = await _defaultLogin(email, password).catch(exception => {
@@ -78,6 +93,10 @@ class Register extends React.Component {
               responseProps: {
                 status: "has-text-danger",
                 message: error.errmsg
+              },
+              loading: {
+                text: "Confirm",
+                isLoading: false
               }
             });
           });
@@ -85,6 +104,12 @@ class Register extends React.Component {
 
         if (data) {
           _setToken(data);
+          this.setState({
+            loading: {
+              text: "Confirm",
+              isLoading: false
+            }
+          });
         }
       } else if (res.status >= 400) {
         res.json().then(parsed => {
@@ -92,6 +117,10 @@ class Register extends React.Component {
             responseProps: {
               status: "has-text-danger",
               message: parsed.errmsg
+            },
+            loading: {
+              text: "Confirm",
+              isLoading: false
             }
           });
         });
@@ -101,7 +130,7 @@ class Register extends React.Component {
 
   render() {
     const [defaultForm, setDefaultForm] = this.props.contextProps;
-    const { email, password, responseProps, formProps } = this.state;
+    const { email, password, responseProps, formProps, loading } = this.state;
 
     return (
       <>
@@ -191,7 +220,7 @@ class Register extends React.Component {
               className="button is-info is-fullwidth is-rounded"
               onClick={this.register}
             >
-              Confirm
+              <Loader loading={loading} />
             </button>
           </p>
         </div>

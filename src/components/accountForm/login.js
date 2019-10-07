@@ -1,7 +1,7 @@
 import React from "react";
 import "./modal.scss";
 import { AuthServiceContext } from "../../utils/index";
-
+import Loader from "../Loader";
 class Login extends React.Component {
   state = {
     email: "",
@@ -9,6 +9,10 @@ class Login extends React.Component {
     responseProps: {
       status: "",
       message: ""
+    },
+    loading: {
+      text: "Login",
+      isLoading: false
     }
   };
   componentDidMount() {
@@ -43,12 +47,22 @@ class Login extends React.Component {
       return;
     }
 
+    this.setState({
+      loading: {
+        text: "Login",
+        isLoading: true
+      }
+    });
     const data = await _defaultLogin(email, password).catch(exception => {
       exception.json().then(error => {
         this.setState({
           responseProps: {
             status: "has-text-danger",
             message: error.message
+          },
+          loading: {
+            text: "Login",
+            isLoading: false
           }
         });
       });
@@ -56,12 +70,19 @@ class Login extends React.Component {
 
     if (data) {
       _setToken(data);
+
+      this.setState({
+        loading: {
+          text: "Login",
+          isLoading: false
+        }
+      });
     }
   };
 
   render() {
     const [defaultForm, setDefaultForm] = this.props.contextProps;
-    const { email, password, responseProps } = this.state;
+    const { email, password, responseProps, loading } = this.state;
     return (
       <>
         <>
@@ -117,7 +138,7 @@ class Login extends React.Component {
                 className="button is-info is-fullwidth is-rounded"
                 onClick={this.login}
               >
-                Login
+                <Loader loading={loading} />
               </button>
             </p>
           </div>
