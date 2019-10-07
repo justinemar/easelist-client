@@ -5,7 +5,7 @@ import MandaluyongCard from "../mandaluyong.jpg";
 import QuezonCityCard from "../quezoncity.jpg";
 import TextLoop from "react-text-loop";
 import { Link } from "react-router-dom";
-
+import Loader from "./Loader";
 function SuggestionBox({ data, searchTerm, redirectSearch }) {
   return (
     <>
@@ -43,7 +43,10 @@ class IndexComponent extends React.Component {
       data: [],
       showSuggestions: false,
       noRes: false,
-      loading: false
+      loading: {
+        text: "Search",
+        isLoading: false
+      }
     };
   }
 
@@ -65,13 +68,19 @@ class IndexComponent extends React.Component {
   onSearchValueChange = e => {
     this.setState({
       searchValue: e.target.value,
-      loading: true
+      loading: {
+        text: "Search",
+        isLoading: true
+      }
     });
     if (e.target.value.length <= 2 && e.key === "Backspace") {
       this.setState({
         data: [],
         noRes: false,
-        loading: false
+        loading: {
+          text: "Search",
+          isLoading: false
+        }
       });
       return;
     }
@@ -91,12 +100,21 @@ class IndexComponent extends React.Component {
           console.log("ey");
           this.setState({
             noRes: true,
-            loading: false
+            loading: {
+              text: "Search",
+              isLoading: false
+            }
           });
           return;
         }
 
-        this.setState({ data: [...res], loading: false });
+        this.setState({
+          data: [...res],
+          loading: {
+            text: "Search",
+            isLoading: false
+          }
+        });
       });
   };
 
@@ -161,13 +179,7 @@ class IndexComponent extends React.Component {
                     className="button is-info is-large"
                     onClick={() => this.onSearchSubmit()}
                   >
-                    {loading ? (
-                      <span className="icon">
-                        <i class="fas fa-spinner fa-pulse"></i>
-                      </span>
-                    ) : (
-                      <p>Search</p>
-                    )}
+                    <Loader loading={loading} />
                   </button>
                 </div>
               </div>
