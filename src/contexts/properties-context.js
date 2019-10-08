@@ -31,7 +31,7 @@ export class PropertyProvider extends React.Component {
 
   getRelatedResults = () => {
     const param = this.props.match.params.searchParam;
-    fetch(`https://backend-easelist.herokuapp.com/api/search?query=${param}`, {
+    fetch(`${process.env.REACT_APP_API_URL}/api/search?query=${param}`, {
       method: "POST",
       body: JSON.stringify({
         type: "context"

@@ -82,7 +82,7 @@ export class AuthService extends React.Component {
 
   _defaultLogin = (email, password) => {
     console.log(email, password);
-    return fetch("https://backend-easelist.herokuapp.com/api/account", {
+    return fetch(`${process.env.REACT_APP_API_URL}/api/account`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
