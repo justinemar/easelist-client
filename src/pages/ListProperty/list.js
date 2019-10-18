@@ -170,21 +170,21 @@ class ListProperty extends React.Component {
     const { fetch, _getToken } = this.context;
     const { properties, mock } = this.state;
 
-    // if (properties.first_name === "" || properties.last_name === "") {
-    //   return alert("Required missing inputs");
-    // }
+    if (properties.first_name === "" || properties.last_name === "") {
+      return alert("Required missing inputs");
+    }
 
-    // if (properties.title === "" || properties.description === "") {
-    //   return alert("Required missing inputs");
-    // }
+    if (properties.title === "" || properties.description === "") {
+      return alert("Required missing inputs");
+    }
 
-    // if (properties.starting_price === "" || properties.city === "") {
-    //   return alert("Required missing inputs");
-    // }
+    if (properties.starting_price === "" || properties.city === "") {
+      return alert("Required missing inputs");
+    }
 
-    // if (properties.province === "" || properties.zip_code === "") {
-    //   return alert("Required missing inputs");
-    // }
+    if (properties.province === "" || properties.zip_code === "") {
+      return alert("Required missing inputs");
+    }
 
     if (properties.coords.lat === "" || properties.coords.lng === "") {
       alert("Confirm your coordinates!");
