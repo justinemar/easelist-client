@@ -168,23 +168,23 @@ class ListProperty extends React.Component {
 
   submitListing = () => {
     const { fetch, _getToken } = this.context;
-    const { properties } = this.state;
+    const { properties, mock } = this.state;
 
-    if (properties.first_name === "" || properties.last_name === "") {
-      return alert("Required missing inputs");
-    }
+    // if (properties.first_name === "" || properties.last_name === "") {
+    //   return alert("Required missing inputs");
+    // }
 
-    if (properties.title === "" || properties.description === "") {
-      return alert("Required missing inputs");
-    }
+    // if (properties.title === "" || properties.description === "") {
+    //   return alert("Required missing inputs");
+    // }
 
-    if (properties.starting_price === "" || properties.city === "") {
-      return alert("Required missing inputs");
-    }
+    // if (properties.starting_price === "" || properties.city === "") {
+    //   return alert("Required missing inputs");
+    // }
 
-    if (properties.province === "" || properties.zip_code === "") {
-      return alert("Required missing inputs");
-    }
+    // if (properties.province === "" || properties.zip_code === "") {
+    //   return alert("Required missing inputs");
+    // }
 
     if (properties.coords.lat === "" || properties.coords.lng === "") {
       alert("Confirm your coordinates!");
@@ -196,10 +196,22 @@ class ListProperty extends React.Component {
       return;
     }
 
-    fetch("https://backend-easelist.herokuapp.com/api/property", {
-      method: "POST",
-      body: JSON.stringify({ ...properties })
-    }).then(res => {
+    const formData = new FormData();
+    formData.append("properties", JSON.stringify(properties));
+    properties.ImagesData.forEach(image => {
+      formData.append("image", image);
+    });
+
+    fetch(
+      `${process.env.REACT_APP_API_URL}/api/property`,
+      {
+        method: "POST",
+        body: formData
+      },
+      {
+        headers: {}
+      }
+    ).then(res => {
       alert("success now awaiting verification.");
     });
   };

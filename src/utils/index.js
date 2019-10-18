@@ -100,20 +100,16 @@ export class AuthService extends React.Component {
     });
   };
 
-  fetch = (url, options) => {
+  fetch = (url, options, reqHead) => {
     // performs api calls sending the required authentication header
-
-    const headers = {
-      "Content-Type": "application/json"
-    };
+    const { headers } = reqHead;
 
     // Setting Authorization header
     // Authorization: Bearer xxxxxxx.xxxxxxxx.xxxxxx
 
     headers.Authorization = `Bearer ${this._getToken()}`;
-
     return fetch(url, {
-      headers,
+      ...reqHead,
       ...options
     }).then(response => response.json());
   };
