@@ -88,7 +88,7 @@ class IndexComponent extends React.Component {
     if (e.target.value.length <= 2) return;
 
     fetch(
-      `https://backend-easelist.herokuapp.com/api/search/partial?query=${e.target.value}`,
+      `${process.env.REACT_APP_API_URL}/api/search/partial?query=${e.target.value}`,
       {
         method: "POST"
       }

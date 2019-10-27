@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "bulma": "^0.7.5",
+    "bulma-carousel": "^4.0.4",
     "bulma-checkradio": "^1.1.1",
     "bulma-divider": "^0.2.0",
     "d3-ease": "^1.0.5",

@@ -10,7 +10,9 @@ import { AuthServiceWithRouter, AuthServiceContext } from "./utils/index";
 import { PropertyProvider } from "./contexts/properties-context";
 import { ModalProvider } from "./components/accountForm/index";
 import IndexComponent from "./components/index";
-import SearchResult from "./pages/SearchResult/index";
+import SearchResult from "./pages/SearchResult";
+import SelectedProperty from "./pages/SearchResult/SelectedProperty";
+
 import HeaderComponent from "./components/Header/header";
 import DashBoard from "./pages/Dashboard";
 import ListProperty from "./pages/ListProperty/list";
@@ -75,6 +77,14 @@ function App() {
             />
             <ProtectedRoute path="/dashboard" component={DashBoard} />
             <Route path="/list" render={props => <ListProperty {...props} />} />
+            <Route
+              path="/:provinceParam/:searchParam/:slug"
+              render={props => (
+                <PropertyProvider {...props}>
+                  <SelectedProperty {...props} />
+                </PropertyProvider>
+              )}
+            />
             <Route
               path="/:provinceParam/:searchParam"
               render={props => (

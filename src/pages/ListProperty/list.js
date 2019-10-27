@@ -308,6 +308,7 @@ class ListProperty extends React.Component {
 
   addImageData = () => {
     const fileList = Array.from(this.imageUpload.current.files);
+
     this.setState(prevState => ({
       properties: {
         ...prevState.properties,
@@ -330,6 +331,12 @@ class ListProperty extends React.Component {
 
   previewFile = e => {
     const images = [];
+
+    if (this.state.properties.ImagesData.length >= 4) {
+      alert("MAX IMAGES REACHED");
+      return;
+    }
+
     for (let i = 0; i < e.currentTarget.files.length; i++) {
       const file = e.currentTarget.files[i];
       const image = URL.createObjectURL(file);

@@ -124,20 +124,9 @@ function CardLoader() {
   );
 }
 
-//   display: flex;
-//   flex-direction: column;
-//   width: 100%;
-//   height: 100%;
-
-//   display: flex;
-//     flex-direction: column;
-//     width: 100%;
-//     height: 100%;
-// }
-
-function ResultCard({ refs, queryResult, showPopUp, selectedProperty }) {
+function ResultCard({ ...props }) {
   let isHighlighted = "";
-
+  const { refs, queryResult, showPopUp, selectedProperty, openCard } = props;
   return queryResult && queryResult.features.length ? (
     queryResult.features.map((data, key) => {
       if (data && selectedProperty) {
@@ -152,6 +141,7 @@ function ResultCard({ refs, queryResult, showPopUp, selectedProperty }) {
       const handleMouseOut = () => {
         showPopUp([]);
       };
+
       return (
         <div
           ref={refs[data._id]}
@@ -159,6 +149,7 @@ function ResultCard({ refs, queryResult, showPopUp, selectedProperty }) {
           class={`property-card ${isHighlighted}`}
           onMouseOver={handleMouseOver}
           onMouseOut={handleMouseOut}
+          onClick={() => openCard(`${data.lists.facts.title}-${data._id}`)}
         >
           <div class="property-image-wrapper">
             <div
@@ -282,6 +273,18 @@ class SearchResult extends React.Component {
     });
   }
 
+  openCard = slug => {
+    const { history } = this.props;
+    const { selectedSearch } = this.state;
+    const { provinceParam, searchParam } = this.props.match.params;
+    let Url = slug.replace(/ /g, "-");
+
+    history.push({
+      pathname: `/${provinceParam}/${searchParam}/${Url}`,
+      selectedSearch
+    });
+  };
+
   handleChange = e => {
     this.setState({
       newSearchValue: e.target.value
@@ -389,6 +392,7 @@ class SearchResult extends React.Component {
                               showPopUp={item =>
                                 props.setSelectedProperty(item)
                               }
+                              openCard={this.openCard}
                               selectedProperty={props.selectedProperty}
                               queryResult={props.queryResult}
                               refs={props.refs}

@@ -34,7 +34,7 @@ $body-color: $just-white;
 $family-sans-serif: "Nunito", sans-serif;
 $grey-dark: $brown;
 $grey-light: $beige-light;
-$primary: $purple;
+$primary: $brand;
 $link: $just-white;
 $widescreen-enabled: false;
 $fullhd-enabled: false;
@@ -56,6 +56,7 @@ $input-shadow: none;
 @import "../node_modules/bulma/sass/form/_all.sass";
 @import "../node_modules/bulma/sass/components/navbar.sass";
 @import "../node_modules/bulma/sass/components/media.sass";
+@import "../node_modules/bulma/sass/components/level.sass";
 @import "../node_modules/bulma/sass/components/menu.sass";
 @import "../node_modules/bulma/sass/components/modal.sass";
 @import "../node_modules/bulma/sass/components/message.sass";
@@ -65,6 +66,8 @@ $input-shadow: none;
 @import "../node_modules/bulma/sass/grid/columns.sass";
 @import "../node_modules/bulma-divider/src/sass/index.sass";
 @import "../node_modules/bulma-checkradio/src/sass/index.sass";
+@import "../node_modules/bulma-carousel/src/sass/index.sass";
+// Import component
 
 #app {
   background: #448fff;

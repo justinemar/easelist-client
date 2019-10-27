@@ -1,0 +1,55 @@
+.carousel,
+.item,
+.slider {
+  height: 100%;
+}
+
+.property-facts {
+  text-align: left;
+  padding-bottom: 30px;
+}
+
+.floor-image {
+  background: #e6e6e6;
+  width: 130px;
+  height: 115px;
+}
+
+.level-item {
+  justify-content: left !important;
+}
+
+.selected-page {
+  min-height: 45vh !important;
+}
+
+.selected-page-features {
+  background: #ffffff !important;
+}
+
+.property-facts h1 {
+  color: #448fff;
+  font-weight: 900;
+}
+
+.property-facts p,
+.property-facts ul li {
+  color: black;
+}
+
+.property-info p {
+  color: #f8e71c;
+  font-weight: bold;
+}
+
+.property-info-container .buttons button {
+  color: #448fff;
+  background: white;
+  border-radius: 10px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+div.property-highlights p:nth-child(2) {
+  margin-bottom: 10px;
+}
